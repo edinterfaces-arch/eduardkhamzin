@@ -2,6 +2,9 @@
   "name": "eduard-ai-designer",
   "compatibility_date": "2026-11-05",
   "workers_dev": true,
+  "build": {
+    "command": "mkdir -p public && cp index.html public/index.html"
+  },
   "assets": {
     "directory": "./public"
   }
