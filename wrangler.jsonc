@@ -1,0 +1,8 @@
+{
+  "name": "eduard-ai-designer",
+  "compatibility_date": "2026-11-05",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public"
+  }
+}
