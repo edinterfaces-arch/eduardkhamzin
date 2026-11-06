@@ -14,9 +14,9 @@ const spring = { type: 'spring', duration: 0.5, bounce: 0.12 };
 function WordReveal({ text, delay = 0, className = '' }) {
   const reduced = useReducedMotion();
   return <motion.span className={className} initial="hidden" animate="shown" transition={{ staggerChildren: reduced ? 0 : 0.025, delayChildren: reduced ? 0 : delay }}>
-    {text.split(' ').map((word, i) => <motion.span key={i} className="word"
+    {text.split(/(\s+)/).map((word, i) => /^\s+$/.test(word) ? word : <motion.span key={i} className="word"
       variants={{ hidden: { opacity: 0, filter: reduced ? 'none' : 'blur(4px)' }, shown: { opacity: 1, filter: 'blur(0px)' } }}
-      transition={{ duration: reduced ? 0 : 0.3 }}>{i > 0 ? ' ' : ''}{word}</motion.span>)}
+      transition={{ duration: reduced ? 0 : 0.3 }}>{word}</motion.span>)}
   </motion.span>;
 }
 
@@ -140,7 +140,7 @@ function Home({ onProjects, sound, setSound }) {
     <section className="intro" aria-labelledby="name">
       <h1 id="name"><WordReveal text={`Hey, I'm ${profile.name}`} delay={0.2} /></h1>
       <motion.p className="subtitle" {...show(0.5)}>{profile.role} based in {profile.location}</motion.p>
-      <p className="bio"><WordReveal text="Currently, I'm building things at" delay={1} />{' '}<motion.a href={profile.companyUrl} target="_blank" rel="noreferrer" className="company-link" {...show(1.2)}>{profile.company}</motion.a><WordReveal text={`. ${profile.introduction}`} delay={1.3} /></p>
+      <p className="bio"><WordReveal text="Currently, I'm building things at" delay={1} />{' '}<motion.span className="company-mention" {...show(1.2)}><a href={profile.companyUrl} target="_blank" rel="noreferrer" className="company-link">{profile.company}</a>.</motion.span>{' '}<WordReveal text={profile.introduction} delay={1.3} /></p>
     </section>
     <motion.div className="map-section" {...show(1.85)}><Suspense fallback={<div className="map-loading" aria-label="Loading map" />}><WorldMap replay={replay} /></Suspense></motion.div>
     <section className="community" aria-labelledby="community-title">

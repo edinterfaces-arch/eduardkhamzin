@@ -41,4 +41,4 @@ The existing Cloudflare Workers Builds connection also deploys changes pushed to
 
 The map data is generated from Natural Earth through the `world-atlas` package, using `d3-geo` and `topojson-client`. To regenerate it after changing the sample origin, run `node scripts/generate-map.mjs`. Country names and geography are public map data, not visitor locations.
 
-Images are local PNG placeholders downloaded from Placehold.co. Fonts are locally bundled Inter and Geist Mono. Icons use Lucide. No original portraits, product screenshots, videos, branding, or contact details are included.
+Images are local PNG placeholders downloaded from Placehold.co. Typography uses the native SF Pro system font on Apple platforms, with a system sans-serif fallback elsewhere. No proprietary font files are distributed. Icons use Lucide. No original portraits, product screenshots, videos, branding, or contact details are included.

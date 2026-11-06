@@ -19,6 +19,7 @@ export default function WorldMap({ replay }) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    const fontFamily = getComputedStyle(canvas).fontFamily;
     const draw = now => {
       const data = dataRef.current;
       if (!data || !visible) return;
@@ -63,7 +64,7 @@ export default function WorldMap({ replay }) {
       });
       ctx.fillStyle = '#2ca479';
       ctx.beginPath(); ctx.arc(hx, hy, 2.8 * reveal, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#71717a'; ctx.font = '9px "Geist Mono Variable", monospace';
+      ctx.fillStyle = '#71717a'; ctx.font = `9px ${fontFamily}`;
       ctx.fillText('HOME', hx + 8, hy + 13);
       if (clickRef.current) {
         const click = clickRef.current, age = (now - click.at) / 650;

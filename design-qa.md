@@ -31,7 +31,7 @@ Native browser captures became frozen or blank; those captures were rejected. Th
 
 ## Required fidelity surfaces
 
-- Fonts/typography: locally hosted Inter Variable and Geist Mono; 15 px main text with 1.65 line height; 13 px supporting text; compact monospaced labels. The hierarchy, weight, and wrapping remain close to the reference with the requested content replacements.
+- Fonts/typography: native SF Pro through the Apple system-font stack, with a system sans-serif fallback on other platforms; 15 px main text with 1.65 line height; 13 px supporting text; compact monospaced labels. The hierarchy, weight, and wrapping remain close to the reference with the requested content replacements.
 - Spacing/layout: 492 px desktop content column, 24 px mobile gutters, small square portrait, generous introductory spacing, large dotted map, rounded prompt, horizontal project rail. Earlier extra height was corrected. Normal document scrolling keeps the footer reachable on mobile.
 - Colors/tokens: off-white `#fafaf9`, foreground `#18181b`, muted `#71717a`, subtle `#8a8a92`, borders `#e4e4e7`, teal action color. Restrained borders and shadows match the visual hierarchy.
 - Images/assets: all personal and project pictures are replaced by local neutral PNG placeholders. Country geography comes from Natural Earth/world-atlas. Icons come from Lucide. The map is an actual interactive Canvas rendering.
@@ -59,3 +59,16 @@ Demo presence is illustrative rather than a realtime backend. Placeholder images
 - [x] Verify keyboard, touch, reduced motion, privacy, and runtime behavior.
 - [x] Build and validate Cloudflare deployment packaging.
 - [x] Keep original identifying screenshots outside tracked site source.
+
+
+## Font and paragraph alignment update
+
+The user requested SF Pro and corrected alignment for the introductory paragraph. Removed bundled Inter and Geist Mono, switched all page typography and map labels to the native SF Pro system stack, moved spaces outside animated word wrappers, and kept the company link and its period together.
+
+Baseline: `../anonymous-portfolio-evidence/font-update/before-desktop.png` and `before-mobile.png`. Updated captures: `after-desktop.png` and `after-mobile.png` in the same folder. Paired comparisons: `comparison-desktop.png`, `comparison-mobile.png`, and the focused `comparison-paragraph.png`. Desktop captures are 3024 × 1722 pixels at 1512 × 861 CSS px; mobile captures are 780 × 1688 at 390 × 844 CSS px. Comparisons normalize both sides identically. These comparisons were opened and inspected.
+
+The browser's platform-font inspection confirms `.SF NS` / `.SFNS-Regular`, a native system font rather than a downloaded custom face. Every paragraph line starts at zero indentation on desktop and mobile. Paragraph scroll width equals its content width: 492 px desktop and 342 px mobile. Text, link destination, colors, image placeholders, and the surrounding layout remain consistent with the brief. The company name and punctuation stay together. Word entrance animation remains intact with normal wrapping whitespace.
+
+All three privacy checks, all three browser scenarios, and the production build pass. No new actionable design findings. No new design-hook suppressions were added.
+
+final result: passed
