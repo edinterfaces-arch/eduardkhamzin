@@ -1,3 +1,8 @@
-public/
 .wrangler/
 node_modules/
+dist/
+.env*
+!.env.example
+.DS_Store
+test-results/
+playwright-report/

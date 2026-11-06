@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/styles.css"
+        ],
+        "createdAt": "2026-11-06T22:36:00.180Z",
+        "reason": "Agent retained the source-matched animated shimmer for temporary Thinking and checklist loading states; it is functional progress feedback, not decorative heading text."
+      }
+    ]
+  }
+}

@@ -1,0 +1,98 @@
+import { test, expect } from '@playwright/test';
+import { mkdir } from 'node:fs/promises';
+import path from 'node:path';
+
+const evidence = process.env.PORTFOLIO_EVIDENCE || path.resolve('../anonymous-portfolio-evidence');
+
+test('desktop portfolio: reveal, map, presence, navigation, gallery, keyboard and replay', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 1512, height: 861 }, deviceScaleFactor: 2 });
+  const page = await context.newPage();
+  const errors = [], external = [];
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('request', request => { if (!request.url().startsWith(new URL(process.env.PORTFOLIO_URL || 'http://localhost:4173').origin) && request.url().startsWith('http')) external.push(request.url()); });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: "Hey, I'm Your Name" })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Built in 3s' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Show me your projects' }).getByText('show me your projects', { exact: true })).toBeVisible();
+  await expect(page.getByText('128 people from 24 countries', { exact: false })).toBeVisible();
+  await page.getByRole('button', { name: 'Built in 3s' }).click();
+  await expect(page.getByText('Reading profile', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Built in 3s' }).click();
+  await expect(page.getByText('Reading profile', { exact: true })).toBeHidden();
+  await page.getByRole('button', { name: '3 HERE DEMO' }).hover();
+  await expect(page.getByText('Illustrative visitors. No tracking.')).toBeVisible();
+  await page.mouse.move(300, 100);
+  await expect(page.getByText('Illustrative visitors. No tracking.')).toBeHidden();
+
+  const mapData = await (await page.request.get('/map-data.json')).json();
+  const canvas = page.getByRole('img', { name: /Illustrative dotted world map/ });
+  const box = await canvas.boundingBox();
+  const dot = mapData.dots[500];
+  await page.mouse.move(box.x + dot[0] / 540 * box.width, box.y + dot[1] / 280 * box.height);
+  await expect(page.getByText('Sample connection', { exact: true })).toBeVisible();
+  await page.mouse.move(300, 100);
+  await expect(page.getByText('Sample connection', { exact: true })).toBeHidden();
+  await page.evaluate(() => document.activeElement?.blur());
+  await mkdir(evidence, { recursive: true });
+  await page.screenshot({ path: path.join(evidence, 'verified-desktop.png') });
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/\/projects$/);
+  await expect(page.getByRole('status')).toHaveText('Found 3 projects');
+  const first = page.getByRole('link', { name: 'Project One — open placeholder project in a new tab' });
+  await first.focus();
+  await expect(first.getByText('example.com/project-one', { exact: true })).toBeVisible();
+  await expect(first).toHaveAttribute('href', 'https://example.com/project-one');
+  await expect(first).toHaveAttribute('target', '_blank');
+  await page.screenshot({ path: path.join(evidence, 'verified-project-focus.png') });
+  const before = await page.locator('.project-rail').evaluate(e => e.scrollLeft);
+  await page.getByRole('button', { name: 'Next project' }).click();
+  await expect.poll(() => page.locator('.project-rail').evaluate(e => e.scrollLeft)).toBeGreaterThan(before + 100);
+  await page.keyboard.press('Escape');
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole('heading', { name: "Hey, I'm Your Name" })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'REPLAY', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'REPLAY', exact: true }).click();
+  await expect(page.getByRole('button', { name: /Thinking/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Built in 3s' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'email', exact: true })).toHaveAttribute('href', 'mailto:hello@example.com');
+  expect(errors).toEqual([]);
+  expect(external).toEqual([]);
+  await context.close();
+});
+
+test('mobile portfolio reflows and projects remain usable without page overflow', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+  const page = await context.newPage();
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: 'Built in 3s' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Show me your projects' }).getByText('show me your projects', { exact: true })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+  await page.screenshot({ path: path.join(evidence, 'verified-mobile.png') });
+  await page.getByRole('button', { name: 'Show me your projects' }).tap();
+  await expect(page.getByRole('status')).toHaveText('Found 3 projects');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+  const dimensions = await page.locator('.project-caption').evaluateAll(elements => elements.map(e => ({ width: e.clientWidth, scroll: e.scrollWidth })));
+  dimensions.forEach(d => expect(d.scroll).toBeLessThanOrEqual(d.width));
+  await page.screenshot({ path: path.join(evidence, 'verified-mobile-projects.png') });
+  await page.getByRole('button', { name: 'Next project' }).tap();
+  await expect.poll(() => page.locator('.project-rail').evaluate(e => e.scrollLeft)).toBeGreaterThan(100);
+  await page.getByRole('button', { name: 'Back ESC' }).tap();
+  await expect(page.getByRole('heading', { name: "Hey, I'm Your Name" })).toBeVisible();
+  expect(errors).toEqual([]);
+  await context.close();
+});
+
+test('reduced motion and direct project route work', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: 'Built in 3s' })).toBeVisible({ timeout: 1500 });
+  await expect(page.getByRole('button', { name: 'Show me your projects' }).getByText('show me your projects', { exact: true })).toBeVisible({ timeout: 1500 });
+  await page.goto('/projects');
+  await expect(page.getByRole('status')).toHaveText('Found 3 projects', { timeout: 1500 });
+  await page.getByRole('link', { name: /Project One —/ }).focus();
+  await expect(page.getByText('example.com/project-one', { exact: true })).toBeVisible({ timeout: 1500 });
+  await context.close();
+});

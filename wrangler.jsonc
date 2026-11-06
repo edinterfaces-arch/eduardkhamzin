@@ -1,11 +1,12 @@
 {
-  "name": "eduard-ai-designer",
+  "name": "eduardkhamzin",
   "compatibility_date": "2026-11-05",
   "workers_dev": true,
   "build": {
-    "command": "mkdir -p public && cp index.html public/index.html"
+    "command": "npm run build"
   },
   "assets": {
-    "directory": "./public"
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
   }
 }

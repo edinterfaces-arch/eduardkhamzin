@@ -1,63 +1,18 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Eduard Khamzin — AI Designer. Selected experiments and interactive prototypes.">
-  <title>Eduard Khamzin — AI Designer</title>
-  <style>
-    :root { --paper:#f7f7f2; --ink:#252722; --muted:#686b61; --line:#d9dbd2; --accent:#416040; }
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body { margin:0; background:var(--paper); color:var(--ink); font-family:Arial,Helvetica,sans-serif; -webkit-font-smoothing:antialiased; }
-    a { color:inherit; text-decoration:none; }
-    a:focus-visible { outline:2px solid var(--accent); outline-offset:8px; }
-    .page { max-width:1120px; margin:auto; padding:40px 48px 24px; }
-    header { display:flex; justify-content:space-between; align-items:center; font-size:14px; }
-    .signature { font-weight:600; letter-spacing:-.4px; }
-    .nav { color:var(--muted); padding:12px 0; }
-    .nav:hover { color:var(--ink); }
-    .intro { padding:120px 0 104px; max-width:860px; }
-    .eyebrow { font-size:13px; color:var(--muted); margin:0 0 24px; }
-    h1 { font-size:clamp(52px,8.5vw,104px); font-weight:400; line-height:1; letter-spacing:-.075em; margin:0 0 32px; }
-    .intro p:last-child { font-size:21px; line-height:1.5; letter-spacing:-.5px; max-width:420px; margin:0; color:var(--muted); }
-    .section-heading { display:flex; align-items:baseline; justify-content:space-between; border-top:1px solid var(--line); padding:24px 0; }
-    h2 { font-size:14px; font-weight:400; margin:0; }
-    .count { font-size:12px; color:var(--muted); }
-    .project { display:block; }
-    .art { min-height:320px; height:36vw; max-height:440px; display:grid; place-items:center; background:#e8ebdf; overflow:hidden; position:relative; }
-    .art::before { content:""; position:absolute; inset:0; background-image:radial-gradient(#9ba48c 1px,transparent 1px); background-size:20px 20px; opacity:.28; }
-    .sample { display:flex; align-items:center; gap:48px; padding:24px 32px; border:1px solid #ffffff80; border-radius:16px; background:#f7f8f2; box-shadow:0 8px 0 #c7cebd,0 18px 32px #404d2020; font-size:20px; letter-spacing:-.5px; position:relative; transition:transform .2s,box-shadow .2s; }
-    .sample span:last-child { font-size:24px; color:var(--accent); }
-    .project:hover .sample { transform:translateY(4px); box-shadow:0 4px 0 #c7cebd,0 12px 24px #404d2020; }
-    .art-label { position:absolute; bottom:20px; left:24px; font-size:11px; letter-spacing:1px; color:#626d55; }
-    .caption { display:flex; justify-content:space-between; gap:24px; padding:24px 0; }
-    h3 { font-size:18px; font-weight:400; letter-spacing:-.4px; margin:0 0 8px; }
-    .caption p { color:var(--muted); font-size:13px; margin:0; }
-    .open { font-size:14px; white-space:nowrap; }
-    footer { margin-top:80px; border-top:1px solid var(--line); padding-top:24px; display:flex; justify-content:space-between; color:var(--muted); font-size:12px; }
-    @media(max-width:600px) { .page { padding:24px; } .intro { padding:88px 0 72px; } .intro p:last-child { font-size:18px; } .art { min-height:280px; } .sample { padding:20px 24px; gap:32px; } .caption { gap:12px; } .open { font-size:12px; } footer { margin-top:48px; } }
-    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } .sample { transition:none; } }
-  </style>
-</head>
-<body>
-  <div class="page">
-    <header><a class="signature" href="#">Eduard Khamzin</a><a class="nav" href="#work">Selected work ↘</a></header>
-    <main>
-      <section class="intro" aria-labelledby="intro-title">
-        <p class="eyebrow">Independent practice · Design & experimentation</p>
-        <h1 id="intro-title">AI Designer.</h1>
-        <p>Exploring ideas through interfaces,<br>AI, and working prototypes.</p>
-      </section>
-      <section id="work" aria-labelledby="work-title">
-        <div class="section-heading"><h2 id="work-title">Selected experiment</h2><span class="count">01</span></div>
-        <a class="project" href="https://edits-interactivebuttonprototype.ed-interfaces.workers.dev/" target="_blank" rel="noopener noreferrer" aria-label="Interactive button — open live prototype in a new tab">
-          <div class="art" aria-hidden="true"><div class="sample"><span>A little interaction</span><span>↗</span></div><span class="art-label">INTERACTION STUDY / 001</span></div>
-          <div class="caption"><div><h3>Interactive button</h3><p>Interaction experiment · Live prototype</p></div><span class="open">Explore prototype ↗</span></div>
-        </a>
-      </section>
-    </main>
-    <footer><span>Eduard Khamzin</span><span>Always experimenting.</span></footer>
-  </div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fafaf9" />
+    <meta name="description" content="A personal space for ideas, experiments, and selected work. An interactive portfolio template with placeholder content." />
+    <meta property="og:title" content="Your Name — Portfolio" />
+    <meta property="og:description" content="Ideas, experiments, and selected work." />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/images/profile.png" type="image/png" />
+    <title>Your Name — Portfolio</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
