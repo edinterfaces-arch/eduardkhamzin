@@ -2,20 +2,23 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 async function scrollAt(page, selector, fraction = 0) {
-  await page
-    .locator(selector)
-    .evaluate(
-      (el, fraction) =>
-        scrollTo(
-          0,
-          el.getBoundingClientRect().top +
-            scrollY +
-            el.offsetHeight * fraction -
-            innerHeight * 0.25,
-        ),
-      fraction,
-    );
-  await page.waitForTimeout(80);
+  await page.locator(selector).evaluate((el, fraction) => {
+    const track = el.closest("[data-phone-track]"),
+      content = el.closest("[data-screen-content]");
+    const phone = track?.querySelector("[data-phone]"),
+      screen = track?.querySelector("[data-screen]");
+    let top = el.getBoundingClientRect().top + scrollY;
+    if (phone && content && getComputedStyle(phone).position === "sticky")
+      top =
+        track.getBoundingClientRect().top +
+        scrollY +
+        screen.getBoundingClientRect().top -
+        phone.getBoundingClientRect().top +
+        el.getBoundingClientRect().top -
+        content.getBoundingClientRect().top;
+    scrollTo(0, top + el.offsetHeight * fraction - innerHeight * 0.25);
+  }, fraction);
+  await page.waitForTimeout(100);
 }
 async function chooseLanguage(page, name) {
   const box = await page
@@ -33,77 +36,92 @@ async function readingPosition(page, selector) {
     );
 }
 
-test("complete forward/reverse scroll, deterministic boundaries, resize and refresh", async ({
+test("projects are inside phone screens and reverse page scrolling reproduces the content position", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   const errors = [];
-  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
+  await expect(
+    page.locator("[data-phone] [data-screen] [data-project]"),
+  ).toHaveCount(9);
   await expect(page.locator("[data-project]")).toHaveCount(9);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-  for (const [id, shell] of [
-    ["project-1", "present"],
-    ["project-4", "social"],
-    ["project-7", "early"],
+  for (const id of [
+    "project-1",
+    "project-4",
+    "project-7",
+    "project-9",
+    "project-5",
+    "project-2",
   ]) {
-    await scrollAt(page, "#" + id, 0.2);
-    await expect(page.locator(`[data-shell=${shell}]`)).toHaveCSS(
-      "opacity",
-      "1",
-    );
+    await scrollAt(page, "#" + id, 0.3);
+    const data = await page.locator("#" + id).evaluate((el) => {
+      const r = el.getBoundingClientRect(),
+        screen = el.closest("[data-screen]").getBoundingClientRect();
+      return {
+        inside: r.left >= screen.left - 1 && r.right <= screen.right + 1,
+        intersects: r.bottom > screen.top && r.top < screen.bottom,
+        transform: el.closest("[data-screen-content]").style.transform,
+      };
+    });
+    expect(data.inside).toBe(true);
+    expect(data.intersects).toBe(true);
+    expect(data.transform).toContain("translate3d");
   }
-  await scrollAt(page, "#ending", 0.3);
-  await expect(page.locator(".device-stage")).toHaveCSS("visibility", "hidden");
-  for (const [id, shell] of [
-    ["project-7", "early"],
-    ["project-4", "social"],
-    ["project-1", "present"],
-  ]) {
-    await scrollAt(page, "#" + id, 0.2);
-    await expect(page.locator(`[data-shell=${shell}]`)).toHaveCSS(
-      "opacity",
-      "1",
-    );
-  }
-  const boundary = await page
-    .locator("#social")
-    .evaluate(
-      (el) => el.getBoundingClientRect().top + scrollY - innerHeight * 0.44,
-    );
-  await page.evaluate((y) => scrollTo(0, y), boundary);
-  await page.waitForTimeout(80);
-  const opacity = Number(
-    await page
-      .locator("[data-shell=social]")
-      .evaluate((el) => el.style.opacity),
-  );
-  expect(opacity).toBeGreaterThan(0.48);
-  expect(opacity).toBeLessThan(0.52);
-  await page.evaluate((y) => scrollTo(0, y + 700), boundary);
-  await page.evaluate((y) => scrollTo(0, y), boundary);
-  await page.waitForTimeout(80);
+  await scrollAt(page, "#project-5", 0.5);
+  const before = await page
+    .locator("#project-5")
+    .evaluate((el) => el.closest("[data-screen-content]").style.transform);
+  await scrollAt(page, "#project-8", 0.4);
+  await scrollAt(page, "#project-5", 0.5);
   expect(
-    Number(
-      await page
-        .locator("[data-shell=social]")
-        .evaluate((el) => el.style.opacity),
-    ),
-  ).toBeCloseTo(opacity, 2);
+    await page
+      .locator("#project-5")
+      .evaluate((el) => el.closest("[data-screen-content]").style.transform),
+  ).toBe(before);
   await page.setViewportSize({ width: 1024, height: 600 });
   await scrollAt(page, "#project-5", 0.3);
-  const before = await page.evaluate(() => scrollY);
+  const y = await page.evaluate(() => scrollY);
   await page.reload();
   await page.waitForTimeout(200);
-  expect(Math.abs((await page.evaluate(() => scrollY)) - before)).toBeLessThan(
-    5,
-  );
-  await page.evaluate(() => scrollTo(0, 0));
-  await page.waitForTimeout(80);
-  await expect(page.locator(".duo-leaf")).toHaveAttribute(
-    "style",
-    /rotateY\(-168deg\)/,
-  );
+  expect(Math.abs((await page.evaluate(() => scrollY)) - y)).toBeLessThan(5);
+  await scrollAt(page, "#ending", 0.3);
+  expect(
+    await page
+      .locator(".phone-early")
+      .evaluate((el) => el.getBoundingClientRect().bottom),
+  ).toBeLessThan(200);
+  for (const era of ["present", "social", "early"]) {
+    await page.locator(`[data-phone=${era}]`).evaluate((phone) => {
+      const track = phone.parentElement,
+        content = phone.querySelector("[data-screen-content]"),
+        screen = phone.querySelector("[data-screen]");
+      scrollTo(
+        0,
+        track.getBoundingClientRect().top +
+          scrollY -
+          parseFloat(getComputedStyle(phone).top) +
+          content.offsetHeight -
+          screen.clientHeight,
+      );
+    });
+    await page.waitForTimeout(80);
+    expect(
+      Math.abs(
+        await page
+          .locator(`[data-phone=${era}]`)
+          .evaluate(
+            (phone) =>
+              phone
+                .querySelector("[data-screen-content]")
+                .getBoundingClientRect().bottom -
+              phone.querySelector("[data-screen]").getBoundingClientRect()
+                .bottom,
+          ),
+      ),
+    ).toBeLessThan(2);
+  }
   expect(errors).toEqual([]);
 });
 
@@ -137,7 +155,10 @@ test("mobile sizes, both languages, no horizontal or nested scrolling", async ({
     await page.setViewportSize({ width, height: width === 320 ? 568 : 844 });
     for (const lang of ["RU", "EN"]) {
       await chooseLanguage(page, lang);
-      await expect(page.locator(".device-stage")).toHaveCSS("display", "none");
+      await expect(page.locator(".portfolio-phone").first()).toHaveCSS(
+        "position",
+        "relative",
+      );
       for (const id of ["project-1", "project-4", "project-7", "ending"]) {
         await scrollAt(page, "#" + id, 0.2);
         expect(
@@ -173,14 +194,8 @@ test("reduced motion and keyboard access keep all content available", async ({
   await page.keyboard.press("Enter");
   expect(await page.evaluate(() => scrollY)).toBeGreaterThan(100);
   await scrollAt(page, "#project-5");
-  await expect(page.locator("[data-shell=social]")).toHaveCSS(
-    "transform",
-    "none",
-  );
-  await expect(page.locator(".duo-leaf")).toHaveAttribute(
-    "style",
-    /rotateY\(0deg\)/,
-  );
+  await expect(page.locator(".fold-cover")).toHaveCSS("visibility", "hidden");
+
   await expect(page.locator("[data-project]")).toHaveCount(9);
   await page.evaluate(() => {
     const text = Array.from(
@@ -202,9 +217,9 @@ test("prototype supports two projects per era and reversible transitions", async
   await page.goto("/prototype/");
   await expect(page.locator("[data-project]")).toHaveCount(4);
   await scrollAt(page, "#project-4", 0.3);
-  await expect(page.locator("[data-shell=social]")).toHaveCSS("opacity", "1");
+  await expect(page.locator("[data-phone] [data-project]")).toHaveCount(4);
   await scrollAt(page, "#project-1", 0.3);
-  await expect(page.locator("[data-shell=present]")).toHaveCSS("opacity", "1");
+  await expect(page.locator("[data-phone] [data-project]")).toHaveCount(4);
 });
 
 test("static HTML retains both language narratives without JavaScript", async ({

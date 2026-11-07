@@ -38,12 +38,12 @@ Next.js App Router, React, strict TypeScript, Tailwind CSS and custom era styles
 - `src/data/projects.ts`: typed localized projects, profile and era metadata.
 - `src/components/PortfolioExperience.tsx`: semantic narrative, localization and contact.
 - `src/components/ProjectRenderer.tsx`: shared case-study/media renderer with platform-specific wrappers.
-- `src/components/Devices.tsx`: decorative CSS hardware.
+- `src/components/Devices.tsx`: CSS hardware containing the real project document.
 - `src/lib/useNarrative.ts`: one scroll source, reversible geometry and reload restoration.
 - `src/app/globals.css`: responsive platform treatments, hardware, accessibility and print styling.
 - `scripts/secure-export.mjs`: exact CSP hashes for Next's static hydration scripts.
 
-Every case study is in HTML and readable without JavaScript. There are no required clicks, hidden carousels or nested scrolling. Desktop device previews sit beside the full case-study feed; mobile uses a readable full-width interpretation.
+Every case study is in HTML and readable without JavaScript. There are no required clicks, hidden carousels or nested scrolling. On desktop the actual case studies render inside sticky phone screens. Native page scrolling moves their content through the screens, with no separate internal scrollbar. Mobile uses the same content at full width.
 
 ## Deployment
 

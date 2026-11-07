@@ -1590,3 +1590,400 @@ video {
 .site-header {
   padding-top: env(safe-area-inset-top);
 }
+
+/* Projects live in the hardware screen. The document scroll is the only driver. */
+.narrative {
+  display: block;
+  max-width: 1120px;
+  padding: 0 40px;
+}
+.era-feed {
+  width: 100%;
+}
+.era {
+  padding-top: 55px;
+}
+.era-heading {
+  max-width: 760px;
+  margin: 0 auto;
+  padding-bottom: 38px;
+}
+.era-end {
+  max-width: 760px;
+  margin: 0 auto 35px;
+  padding-top: 42px;
+}
+.phone-track {
+  position: relative;
+  margin: auto;
+  width: 100%;
+}
+.portfolio-phone {
+  position: sticky;
+  top: 112px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  background: #171b1b;
+  border: 3px solid #90968e;
+  box-shadow:
+    0 0 0 2px #3d423c,
+    0 25px 50px #27302122;
+  isolation: isolate;
+}
+.phone-present {
+  width: 800px;
+  max-width: 100%;
+  height: min(720px, calc(100svh - 150px));
+  min-height: 350px;
+  border-radius: 34px;
+  padding: 10px 12px 14px;
+  perspective: 1600px;
+}
+.phone-social {
+  width: 430px;
+  max-width: 100%;
+  height: min(780px, calc(100svh - 150px));
+  min-height: 350px;
+  border-radius: 48px;
+  padding: 8px 12px 12px;
+}
+.phone-early {
+  width: 410px;
+  max-width: 100%;
+  height: min(750px, calc(100svh - 150px));
+  min-height: 350px;
+  border-radius: 30px;
+  padding: 46px 14px 66px;
+  background: linear-gradient(
+    110deg,
+    #363c3d,
+    #0b0e0f 25%,
+    #202526 80%,
+    #363c3d
+  );
+  border-color: #a9adae;
+}
+.device-status {
+  height: 27px;
+  flex-shrink: 0;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 18px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 22px 22px 0 0;
+}
+.device-screen {
+  min-height: 0;
+  flex: 1;
+  overflow: clip;
+  background: white;
+  position: relative;
+  border-radius: 0 0 20px 20px;
+}
+.screen-content {
+  width: 100%;
+  will-change: transform;
+}
+.screen-content .platform-bar,
+.screen-content .platform-feed {
+  border-radius: 0;
+  border: 0;
+}
+.hardware-top,
+.hardware-bottom {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+.hardware-top {
+  left: 0;
+  right: 0;
+  top: 0;
+}
+.hardware-bottom {
+  bottom: 9px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
+.hardware-notch {
+  display: block;
+  margin: 8px auto 0;
+  width: 145px;
+  height: 23px;
+  background: #171b1b;
+  border-radius: 0 0 16px 16px;
+}
+.hardware-camera {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  width: 7px;
+  height: 7px;
+  border: 1px solid #505c64;
+  background: #152634;
+  border-radius: 50%;
+}
+.hardware-indicator {
+  width: 100px;
+  height: 4px;
+  background: #879083;
+  border-radius: 5px;
+}
+.hardware-speaker {
+  display: block;
+  width: 58px;
+  height: 7px;
+  background: #06090a;
+  border: 1px solid #464d50;
+  border-radius: 5px;
+  margin: 22px auto 0;
+}
+.hardware-home {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  background: linear-gradient(#080a0b, #303638);
+  box-shadow: 0 0 0 1px #454a4a;
+  display: grid;
+  place-items: center;
+}
+.hardware-home i {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #8e9597;
+  border-radius: 4px;
+}
+.phone-early .device-status {
+  border-radius: 0;
+  background: #1c2430;
+  color: white;
+  height: 20px;
+  font-size: 9px;
+  padding: 0 7px;
+}
+.phone-early .device-screen {
+  border-radius: 0;
+}
+.screen-instruction {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+}
+.fold-cover {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  bottom: 12px;
+  width: calc(50% - 10px);
+  background: linear-gradient(110deg, #343c36, #171c18);
+  border: 1px solid #6b7568;
+  border-radius: 6px 24px 24px 6px;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  z-index: 4;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  color: #a8b09d;
+  font-size: 42px;
+}
+.phone-present:after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  left: 50%;
+  top: 10px;
+  bottom: 12px;
+  background: #56634c12;
+  pointer-events: none;
+}
+.phone-present .post-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 36px;
+  padding: 28px 24px 0;
+}
+.phone-present .post-author,
+.phone-present .post-copy,
+.phone-present .case-details {
+  grid-column: 1;
+}
+.phone-present .project-media {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: start;
+  padding-top: 52px;
+}
+.phone-present .post-footer {
+  grid-column: 1 / -1;
+}
+.phone-present .sample-visual {
+  aspect-ratio: 0.85;
+  padding: 26px 14px 36px;
+}
+.phone-present .post-copy h3 {
+  font-size: 28px;
+}
+.phone-present .prompt {
+  padding-right: calc(50% + 18px);
+}
+.phone-present .prompt > span {
+  max-width: 100%;
+}
+.phone-present .mock-main {
+  padding: 15px 9px;
+}
+.phone-present .mock-main strong {
+  font-size: 12px;
+}
+.phone-present .mock-sidebar {
+  width: 28px;
+  padding: 12px 6px;
+}
+.phone-present .mock-cards i {
+  height: 32px;
+}
+.phone-social .post-copy h3,
+.phone-early .post-copy h3 {
+  font-size: 28px;
+}
+.phone-social .post-body,
+.phone-early .post-body {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.phone-social .sample-visual,
+.phone-early .sample-visual {
+  padding: 26px 16px 35px;
+  aspect-ratio: 1.25;
+}
+@media (max-height: 650px) and (min-width: 901px) {
+  .portfolio-phone {
+    top: 100px;
+    min-height: 300px;
+    height: calc(100svh - 125px);
+  }
+  .phone-early {
+    padding-top: 35px;
+    padding-bottom: 49px;
+  }
+  .hardware-speaker {
+    margin-top: 15px;
+  }
+  .hardware-home {
+    height: 32px;
+    width: 32px;
+  }
+  .hardware-bottom {
+    bottom: 7px;
+  }
+}
+@media (max-width: 900px) {
+  .narrative {
+    max-width: 690px;
+    padding: 0 16px;
+  }
+  .era-heading {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .phone-track {
+    height: auto !important;
+  }
+  .portfolio-phone {
+    position: relative;
+    top: auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    background: none;
+    border-radius: 14px;
+  }
+  .device-screen {
+    overflow: visible;
+    border-radius: 14px;
+  }
+  .screen-content {
+    transform: none !important;
+    will-change: auto;
+  }
+  .hardware-top,
+  .hardware-bottom,
+  .device-status,
+  .fold-cover,
+  .screen-instruction,
+  .phone-present:after {
+    display: none;
+  }
+  .screen-content .platform-bar {
+    border-radius: 14px 14px 0 0;
+    border: 1px solid var(--line);
+  }
+  .screen-content .platform-feed {
+    border-radius: 0 0 14px 14px;
+    border: 1px solid var(--line);
+    border-top: 0;
+  }
+  .phone-present .post-body {
+    display: block;
+    padding: 25px 18px 0;
+  }
+  .phone-present .project-media {
+    padding-top: 0;
+  }
+  .phone-present .prompt {
+    padding: 22px 18px 0;
+  }
+  .phone-present .prompt > span {
+    max-width: 85%;
+  }
+  .phone-present .sample-visual {
+    aspect-ratio: 1.25;
+  }
+  .phone-social .post-body,
+  .phone-early .post-body {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+@media print {
+  .phone-track {
+    height: auto !important;
+  }
+  .portfolio-phone {
+    position: relative;
+    top: auto;
+    height: auto;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .device-screen {
+    overflow: visible;
+    height: auto;
+  }
+  .screen-content {
+    transform: none !important;
+  }
+  .hardware-top,
+  .hardware-bottom,
+  .device-status,
+  .fold-cover,
+  .screen-instruction {
+    display: none;
+  }
+}

@@ -1,9 +1,9 @@
 "use client";
 import { useLayoutEffect, useRef, useState } from "react";
 import { eras, projects, profile, Language, t } from "../data/projects";
-import { useNarrative } from "../lib/useNarrative";
+import { useNarrative, documentPosition } from "../lib/useNarrative";
 import { ContactSection } from "./ContactSection";
-import { Devices } from "./Devices";
+import { DeviceScreen } from "./Devices";
 import { ProjectRenderer } from "./ProjectRenderer";
 export function PortfolioExperience({
   initialLanguage = "en",
@@ -14,7 +14,7 @@ export function PortfolioExperience({
 }) {
   const [language, setLanguage] = useState<Language>(initialLanguage);
   const restore = useRef<{ id: string; fraction: number } | null>(null);
-  const active = useNarrative();
+  const active = useNarrative(language);
   const availableEras = prototype ? eras.slice(0, 2) : eras;
   useLayoutEffect(() => {
     document.documentElement.lang = language;
@@ -24,8 +24,7 @@ export function PortfolioExperience({
       if (anchor)
         window.scrollTo({
           top:
-            anchor.getBoundingClientRect().top +
-            scrollY +
+            documentPosition(anchor) +
             saved.fraction * anchor.offsetHeight -
             innerHeight * 0.25,
           behavior: "instant",
@@ -43,7 +42,7 @@ export function PortfolioExperience({
       [...anchors]
         .sort((a, b) => a.offsetHeight - b.offsetHeight)
         .find((el) => {
-          const top = el.getBoundingClientRect().top + scrollY;
+          const top = documentPosition(el);
           return top <= point && top + el.offsetHeight > point;
         }) ??
       anchors.reduce<HTMLElement | undefined>(
@@ -60,9 +59,7 @@ export function PortfolioExperience({
     if (anchor)
       restore.current = {
         id: anchor.id,
-        fraction:
-          (point - (anchor.getBoundingClientRect().top + scrollY)) /
-          anchor.offsetHeight,
+        fraction: (point - documentPosition(anchor)) / anchor.offsetHeight,
       };
     setLanguage(next);
     const url = new URL(location.href);
@@ -155,7 +152,6 @@ export function PortfolioExperience({
           </p>
         </section>
         <div className="narrative" id="narrative">
-          <Devices language={language} />
           <div className="era-feed">
             {availableEras.map((era) => (
               <section
@@ -177,27 +173,29 @@ export function PortfolioExperience({
                   <h2>{era.title[language]}</h2>
                   <p>{era.subtitle[language]}</p>
                 </header>
-                <div className="platform-bar">
-                  <span className="platform-wordmark">
-                    {era[language] === "Tumblr" ? "tumblr." : era[language]}
-                  </span>
-                  <span>
-                    {t(language, "A design journal", "Дневник дизайнера")}
-                  </span>
-                </div>
-                <div className="platform-feed">
-                  {projects
-                    .filter((project) => project.era === era.id)
-                    .slice(0, prototype ? 2 : undefined)
-                    .map((project, index) => (
-                      <ProjectRenderer
-                        key={project.id}
-                        project={project}
-                        language={language}
-                        index={index}
-                      />
-                    ))}
-                </div>
+                <DeviceScreen era={era.id} language={language}>
+                  <div className="platform-bar">
+                    <span className="platform-wordmark">
+                      {era[language] === "Tumblr" ? "tumblr." : era[language]}
+                    </span>
+                    <span>
+                      {t(language, "A design journal", "Дневник дизайнера")}
+                    </span>
+                  </div>
+                  <div className="platform-feed">
+                    {projects
+                      .filter((project) => project.era === era.id)
+                      .slice(0, prototype ? 2 : undefined)
+                      .map((project, index) => (
+                        <ProjectRenderer
+                          key={project.id}
+                          project={project}
+                          language={language}
+                          index={index}
+                        />
+                      ))}
+                  </div>
+                </DeviceScreen>
                 <div className="era-end">
                   {t(language, "A little further back", "Ещё немного назад")}{" "}
                   <span>↓</span>
@@ -214,7 +212,7 @@ export function PortfolioExperience({
         {active < 3 ? eras[active].period : t(language, "NOW", "СЕЙЧАС")}
       </div>
       <noscript>
-        <style>{`.device-stage,.era-indicator{display:none}.narrative{display:block}.era-feed{max-width:760px;margin:auto}.languages{display:none}`}</style>
+        <style>{`.era-indicator,.languages,.hardware-top,.hardware-bottom,.device-status,.fold-cover,.screen-instruction{display:none!important}.phone-track{height:auto!important}.portfolio-phone{position:relative!important;top:auto!important;height:auto!important;max-height:none!important}.device-screen{height:auto!important;overflow:visible!important}.screen-content{transform:none!important}`}</style>
       </noscript>
     </div>
   );

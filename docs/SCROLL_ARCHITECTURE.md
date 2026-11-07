@@ -1,31 +1,20 @@
-# Scroll architecture
+# In-screen scroll architecture
 
-## Document first
+## One document, inside the devices
+`DeviceScreen` contains the actual project DOM inside `.device-screen > .screen-content`. There is no adjacent feed or duplicate preview. The three era sections stack on one central axis. On desktop each phone is sticky within its own measured track.
 
-`PortfolioExperience` renders introduction → present → social → early → ending. Every project is an article in DOM order. No text is mounted, hidden or translated in response to scroll. There are no scroll-snapping regions, nested scroll panes, timed gates or mandatory clicks.
+Let H be phone height, C content height and S screen viewport height. Track height is `H + max(0, C - S)`. Screen translation is `-clamp(scrollY - trackTop + stickyTop, 0, C - S)`. This makes each page-scroll pixel move one content pixel. When the last line reaches the bottom of the screen, the phone begins leaving the viewport naturally. Earlier content returns identically when scrolling back.
 
-Desktop uses a two-column grid. The left column is a sticky, aria-hidden decorative device stage. The right is a full-resolution platform feed. Below 901px the stage disappears and the feed uses the available width. Short desktop screens scale the illustrative hardware, never the readable document.
+`useNarrative` owns one passive scroll listener and a requestAnimationFrame scheduler. Measurements are separate from per-frame transforms. ResizeObserver watches content height. All track heights update before subsequent track positions are measured. No wheel/touch event is intercepted and the screen uses overflow:clip, not overflow:auto or scrollTop.
 
-## One scroll source
+## Responsive behavior
+At widths up to 900px, hardware disappears, the phone is nonsticky, screen height becomes automatic and content transforms are removed. Every case study uses normal document flow. Resizing recomputes the desktop travel if necessary. Short desktop windows use shorter hardware, preserving readable type.
 
-`useNarrative` owns the only scroll listener. It is passive and schedules at most one requestAnimationFrame. Section offsets are measured on setup, resize and ResizeObserver changes. Frames read browser scrollY and write only opacity/transform/visibility on decorative elements. React state updates only when the active era changes, not on every pixel. No wheel or touch event is prevented.
+## Language, links and recovery
+`documentPosition()` maps a project inside a translated screen to its logical outer-page position. Language switching records the current project/fraction, remeasures translated content, and restores the same position. Keyboard focus and direct project hash links use the same mapping. Scoped session storage retains only scrollY on pagehide for WebKit reload recovery. No tracking or identity data is stored.
 
-The reading focus is `scrollY + 0.44 * innerHeight`. Around an era boundary the outgoing and incoming device shells crossfade through a 200px band. At the exact boundary both have opacity 0.5. Scale moves between 0.96 and 1, translation within 28px. The last shell fades toward the ending. The Duo's right panel rotates around its hinge from -168deg to 0deg over the first 65% of one viewport of scrolling (minimum 200px). These are direct mappings, without easing lag or queued playback. Returning to the same scroll position reproduces the same state.
+## Motion and fallbacks
+The foldable cover opens during approach and is fully open before its sticky reading interval. Reduced-motion mode removes that decorative movement. Direct screen translation remains necessary to read, equivalent to native scrolling. No-JS and print styles unclip the entire content, turn off stickiness and remove decorative hardware. All text remains in exported HTML.
 
-## Localization and restoration
-
-The language action finds the smallest semantic anchor containing a point 25% down the viewport (normally a project), then records its fractional position. A layout effect restores that fraction in the translated layout. In inter-project space the era itself is the anchor. CSS scroll anchoring is disabled so it cannot compete with explicit restoration. The query string records language; /ru/ also provides statically rendered Russian content without JS.
-
-Native reload restoration works in Chromium. A pagehide handler saves only scrollY in sessionStorage, scoped to path/query, and restores it on reload for WebKit. Storage errors are ignored. Fragment URLs take precedence. No cross-session history or analytics is collected. Browser resizing remeasures all boundaries; content remains natural flow.
-
-## Reduced motion and fallbacks
-
-Reduced motion switches static device shells immediately and leaves the Duo open. No animated text. CSS-disabled/JS-disabled reading order contains every project. A noscript rule removes decorative hardware and hides the nonfunctional JS selector; the footer links to the alternative static language route. Semantic project text is in the exported HTML, not a canvas.
-
-## Prototype
-
-`/prototype/` uses the same components with two eras and two projects per era. It tests the core scroll architecture independently of the nine-project story. It is marked noindex. The complete page accepts arbitrary project counts; the prototype selection is only an explicit development fixture.
-
-## Checks
-
-`npm run test:browser` covers forward/reverse/fast scrolling, a stopped midpoint, resize, refresh, localization, 320/390/768 widths, reduced motion, keyboard skip access, and no-JS content in Chromium and WebKit. WebKit uses Option-Tab to include links, consistent with its macOS navigation convention. Browser automation is not a substitute for real-device Safari address-bar testing.
+## Verification
+Browser tests assert all nine articles are descendants of actual device screens, only one copy exists, content stays horizontally within the screen, project sections enter the visible screen while scrolling, and reversal reproduces identical transforms. Additional checks cover localization, reload, resize, mobile, no-JS, keyboard, reduced motion, text scaling and contrast in Chromium/WebKit.
