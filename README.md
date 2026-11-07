@@ -1,44 +1,60 @@
-# Interactive portfolio template
+# Three eras. One designer.
 
-A neutral, editable personal website with placeholder profile information, images, projects, and external links. Built with React, Vite, Motion, native View Transitions, and Canvas 2D.
+A bilingual, scroll-led product design portfolio: contemporary conversation → social feed → early internet → a device-free closing. All identity, projects, illustrations and outcomes are explicitly sample content.
 
-## Develop
+## Run locally
+
+Use Node.js 22+ and npm.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Edit `src/content.js` to replace the name, role, city, company, email, social link, project details, and demo map data. Replace images in `public/images/`. Metadata lives in `index.html`.
-
-## Interactions
-
-- A coordinated introduction, expandable build log, and replay.
-- Country highlighting and tooltips on a dotted canvas world map.
-- A typed project prompt, spring-following arrow, hover previews, and shared-element transition into a message.
-- Project loading sequence, horizontal gallery, previous/next controls, and animated hover/focus checklists.
-- Enter opens projects; Escape returns home. Native links and visible keyboard focus work on cards.
-- Optional synthesized sound, off by default. Reduced-motion settings are respected.
-
-The visitors and statistics are clearly labeled demo data. They are not real analytics. The site does not request geolocation, create visitor identifiers, connect to the reference site's services, or track visitors. External destinations use the reserved `example.com` domain.
-
-## Validate and deploy
+Open http://localhost:3000. `/ru/` is the statically rendered Russian version. `/prototype/` is the small two-era, two-project-per-era architecture prototype.
 
 ```sh
+npm run typecheck
 npm test
-npx playwright install chromium
-npm run dev -- --port 4173
-# In another terminal:
-npm run test:browser
 npm run build
-npm run check:deploy
-npm run deploy
+npm run preview
 ```
 
-Cloudflare serves the built `dist/` directory with SPA fallback for `/projects`. Log into Wrangler in your terminal before deploying. The existing compatibility date is retained.
+Production preview is http://localhost:4174 and serves the generated security headers. Restart preview after rebuilding because headers contain exact inline-script hashes.
 
-The existing Cloudflare Workers Builds connection also deploys changes pushed to `main`. `npm run test:browser` checks desktop, mobile, keyboard navigation, the gallery, replay, local assets, and reduced motion. Set `PORTFOLIO_URL` to run the same checks against a deployed site. Screenshots go to `../anonymous-portfolio-evidence` by default; override with `PORTFOLIO_EVIDENCE`.
+Browser tests:
 
-The map data is generated from Natural Earth through the `world-atlas` package, using `d3-geo` and `topojson-client`. To regenerate it after changing the sample origin, run `node scripts/generate-map.mjs`. Country names and geography are public map data, not visitor locations.
+```sh
+npx playwright install chromium webkit
+npm run test:browser
+```
 
-Images are local PNG placeholders downloaded from Placehold.co. Typography uses the native SF Pro system font on Apple platforms, with a system sans-serif fallback elsewhere. No proprietary font files are distributed. Icons use Lucide. No original portraits, product screenshots, videos, branding, or contact details are included.
+Set `PORTFOLIO_URL` to test another deployment.
+
+## Stack and structure
+
+Next.js App Router, React, strict TypeScript, Tailwind CSS and custom era styles. Static export to `out/`; no application server, third-party data calls or animation framework required. SF Pro on Apple devices through the native system font stack.
+
+- `src/data/projects.ts`: typed localized projects, profile and era metadata.
+- `src/components/PortfolioExperience.tsx`: semantic narrative, localization and contact.
+- `src/components/ProjectRenderer.tsx`: shared case-study/media renderer with platform-specific wrappers.
+- `src/components/Devices.tsx`: decorative CSS hardware.
+- `src/lib/useNarrative.ts`: one scroll source, reversible geometry and reload restoration.
+- `src/app/globals.css`: responsive platform treatments, hardware, accessibility and print styling.
+- `scripts/secure-export.mjs`: exact CSP hashes for Next's static hydration scripts.
+
+Every case study is in HTML and readable without JavaScript. There are no required clicks, hidden carousels or nested scrolling. Desktop device previews sit beside the full case-study feed; mobile uses a readable full-width interpretation.
+
+## Deployment
+
+The existing Cloudflare Worker `eduardkhamzin` serves `out/`. Pushes to the connected GitHub `main` branch trigger Workers Builds. `npm run deploy` is available with local Wrangler credentials; `npm run check:deploy` validates the upload. The static export needs no Next server adapter. Configure `NEXT_PUBLIC_SITE_URL` when changing the public origin. The old Vite implementation is preserved in Git history at `af4c78c`.
+
+## Design and authoring
+
+- [UX alternatives and decisions](docs/UX_DECISIONS.md)
+- [Scroll architecture](docs/SCROLL_ARCHITECTURE.md)
+- [Content guide](docs/CONTENT_GUIDE.md)
+- [Open questions and limitations](docs/OPEN_QUESTIONS.md)
+- [QA evidence](design-qa.md)
+
+Platform names and recognizable visual patterns are historical references; this is not an affiliated client or an actual social account. No analytics, geolocation or external platform APIs. Session storage holds only a temporary reading position for reload recovery.
