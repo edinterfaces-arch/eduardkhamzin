@@ -1,11 +1,11 @@
 # eduardkhamzin.ru
 
-A single static page with exactly three visible lines:
+A single static page with a name, role and profile links:
 
 ```text
 Эдуард Хамзин
 AI powered Senior Product Designer
-2001-2026
+Behance · Telegram
 ```
 
 System font, no external resources or JavaScript. Edit the root `index.html`; the earlier portfolio source is inactive and not included in the build.
