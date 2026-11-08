@@ -3,34 +3,50 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light dark">
   <title>Эдуард Хамзин</title>
   <meta name="description" content="Эдуард Хамзин — AI powered Senior Product Designer.">
+  <script src="/assets/theme.js"></script>
   <style>
     * { box-sizing: border-box; }
-    html { background: #fff; color: #111; font-family: system-ui, sans-serif; }
+    html { --bg: #fff; --fg: #111; --muted: #666; --stats: #555; --line: #eee; --track: #e5e5e5; --thumb: #fff; background: var(--bg); color: var(--fg); font-family: system-ui, sans-serif; color-scheme: light; }
+    html[data-theme="dark"] { --bg: #141414; --fg: #f3f3f3; --muted: #aaa; --stats: #bbb; --line: #303030; --track: #505050; --thumb: #f3f3f3; color-scheme: dark; }
+    @media (prefers-color-scheme: dark) { html:not([data-theme]) { --bg: #141414; --fg: #f3f3f3; --muted: #aaa; --stats: #bbb; --line: #303030; --track: #505050; --thumb: #f3f3f3; color-scheme: dark; } }
+    .theme-switch { position: fixed; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); width: 52px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+    .theme-switch[hidden] { display: none; }
+    .theme-track { display: block; width: 42px; height: 24px; border-radius: 20px; background: var(--track); }
+    .theme-thumb { display: grid; place-items: center; width: 18px; height: 18px; margin: 3px; border-radius: 50%; background: var(--thumb); color: #333; }
+    .theme-switch[aria-checked="true"] .theme-thumb { transform: translateX(18px); }
+    .theme-thumb svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+    .theme-switch[aria-checked="true"] .sun, .theme-switch[aria-checked="false"] .moon { display: none; }
     body { margin: 0; min-height: 100svh; display: grid; place-items: center; padding: 24px; }
     main { text-align: center; }
     .portrait { display: block; width: 128px; height: 128px; object-fit: contain; margin: 0 auto 20px; }
     h1 { margin: 0 0 10px; font-size: 24px; font-weight: 500; line-height: 1.4; }
     p { margin: 0; font-size: clamp(13px, 3.6vw, 16px); font-weight: 400; line-height: 1.6; }
     .links { display: flex; justify-content: center; gap: 18px; margin-top: 10px; font-size: 14px; }
-    .links a { color: #666; text-underline-offset: 3px; }
-    a:focus-visible { outline: 2px solid #111; outline-offset: 4px; }
-    .social-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid #eee; max-width: 330px; text-align: left; }
+    .links a { color: var(--muted); text-underline-offset: 3px; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
+    .social-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
     .stats-platform + .stats-platform { margin-top: 14px; }
     .stats-row { display: grid; grid-template-columns: 1fr auto auto; gap: 18px; align-items: center; font-size: 13px; line-height: 1.6; }
     .stats-profile { display: inline-flex; align-items: center; gap: 6px; }
     .award-badge { display: block; width: 18px; height: 30px; flex-shrink: 0; }
-    .stats-row a { color: #555; text-decoration: underline; text-underline-offset: 3px; }
+    .stats-row a { color: var(--stats); text-decoration: underline; text-underline-offset: 3px; }
     .stats-row a:hover { text-decoration: underline; text-underline-offset: 3px; }
-    .stat-number { display: inline-flex; align-items: center; gap: 5px; color: #555; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .stat-number { display: inline-flex; align-items: center; gap: 5px; color: var(--stats); font-variant-numeric: tabular-nums; white-space: nowrap; }
     .stat-number svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.5; flex-shrink: 0; }
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
     @media (max-width: 350px) { .stats-row { gap: 12px; font-size: 12px; } }
   </style>
 </head>
 <body>
+  <button class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Тёмная тема" hidden>
+    <span class="theme-track" aria-hidden="true"><span class="theme-thumb">
+      <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M20 14a8.5 8.5 0 0 1-10-10 8.5 8.5 0 1 0 10 10Z"/></svg>
+    </span></span>
+  </button>
   <main>
     <img class="portrait" src="/assets/portrait-square.jpg" alt="Эдуард Хамзин" width="640" height="640">
     <h1>Эдуард Хамзин</h1>

@@ -26,7 +26,7 @@ This stops website HTTPS routing; the static page and certificates remain on dis
 
 ## Public portfolio counters
 
-`eduard-social-stats.timer` refreshes public profile statistics every six hours. It runs `eduard-social-stats.service` as www-data with a restricted filesystem. The Python script has no external dependencies. It fetches each source once per run, caches the last successful result in `/var/lib/eduard-social-stats/stats.json`, and atomically replaces only the marked statistics fragment in the site's HTML. No JavaScript, tracking or third-party requests run in visitors' browsers.
+`eduard-social-stats.timer` refreshes public profile statistics every six hours. It runs `eduard-social-stats.service` as www-data with a restricted filesystem. The Python script has no external dependencies. It fetches each source once per run, caches the last successful result in `/var/lib/eduard-social-stats/stats.json`, and atomically replaces only the marked statistics fragment in the site's HTML. Statistics require no browser-side requests, tracking or third-party resources. A separate local theme script controls the appearance switch.
 
 Behance: exact profile-level Project Views and Appreciations from the public `/khamzin/info` page, scoped to profile analytics links to avoid mixing in collaborators or team statistics.
 

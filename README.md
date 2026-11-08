@@ -8,7 +8,7 @@ AI powered Senior Product Designer
 Telegram
 ```
 
-System font, no external browser resources or JavaScript. Dribbble/Behance counters are refreshed server-side every six hours, with a last-successful-value cache. Dribbble counts come from its publicly visible feed; the scope is recorded in HTML data attributes and approximate view totals are rounded to hundreds and shown as full numbers. Edit the root `index.html`; the earlier portfolio source is inactive and not included in the build.
+System font and no external browser resources. A small local script controls the accessible top-right theme switch, follows the system theme by default, and saves a manual selection in local storage. Dribbble/Behance counters are refreshed server-side every six hours, with a last-successful-value cache. Dribbble counts come from its publicly visible feed; the scope is recorded in HTML data attributes and approximate view totals are rounded to hundreds and shown as full numbers. Edit the root `index.html`; the earlier portfolio source is inactive and not included in the build.
 
 Open `index.html` directly, or run:
 
