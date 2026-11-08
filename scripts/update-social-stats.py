@@ -120,8 +120,8 @@ def refresh(previous, fetcher=fetch):
 
 def format_count(value, approximate):
     if approximate and value >= 1000:
-        return '≈' + f'{value / 1000:.1f}'.replace('.', ',') + '\u00a0тыс.'
-    return ('≈' if approximate else '') + f'{value:,}'.replace(',', '\u00a0')
+        value = ((value + 50) // 100) * 100
+    return f'{value:,}'.replace(',', '\u00a0')
 
 
 def plural(value, one, few, many):

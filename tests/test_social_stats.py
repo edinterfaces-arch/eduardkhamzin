@@ -17,7 +17,7 @@ class PublicCounterTests(unittest.TestCase):
         value['updated_at'] = '2026-11-09T00:00:00+00:00'
         html = stats.render({'dribbble': value})
         self.assertIn('data-post-count="2"', html)
-        self.assertIn('≈8,0', html)
+        self.assertIn('8\u00a0000', html)
         with self.assertRaises(ValueError):
             stats.parse_number('Unavailable')
 
