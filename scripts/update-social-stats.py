@@ -144,8 +144,9 @@ def render(data):
         likes = format_count(item['likes'], item['approximate_likes'])
         views_label = 'просмотров' if item['approximate_views'] else plural(item['views'], 'просмотр', 'просмотра', 'просмотров')
         likes_label = 'лайков' if item['approximate_likes'] else plural(item['likes'], 'лайк', 'лайка', 'лайков')
+        award = '<svg class="award-badge" viewBox="0 0 24 40" role="img" aria-label="Награда Behance"><title>Награда Behance</title><path d="M0 0H24V39L12 32L0 39Z" fill="#ae945b"/><text x="12" y="24" fill="#fff" font-family="system-ui, sans-serif" font-size="14" text-anchor="middle">Gr</text></svg>' if source == 'behance' else ''
         rows.append(f'''<div class="stats-platform"{scope} title="Обновлено: {updated}">
-        <div class="stats-row"><a href="{escape(item['url'], quote=True)}" target="_blank" rel="noopener noreferrer">{name}</a><span class="stat-number">{eye}{views}<span class="sr-only"> {views_label}</span></span><span class="stat-number">{heart}{likes}<span class="sr-only"> {likes_label}</span></span></div>
+        <div class="stats-row"><span class="stats-profile"><a href="{escape(item['url'], quote=True)}" target="_blank" rel="noopener noreferrer">{name}</a>{award}</span><span class="stat-number">{eye}{views}<span class="sr-only"> {views_label}</span></span><span class="stat-number">{heart}{likes}<span class="sr-only"> {likes_label}</span></span></div>
       </div>''')
     return '<section class="social-stats" aria-label="Просмотры и лайки работ">\n      ' + '\n      '.join(rows) + '\n    </section>' if rows else ''
 
