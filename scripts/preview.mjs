@@ -3,6 +3,7 @@ import { readFile, stat } from "node:fs/promises";
 import { resolve, extname, sep } from "node:path";
 const root = resolve("out");
 const types = {
+  ".jpg": "image/jpeg",
   ".html": "text/html; charset=utf-8",
   ".css": "text/css",
   ".js": "text/javascript",
