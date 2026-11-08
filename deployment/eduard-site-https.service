@@ -1,0 +1,14 @@
+[Unit]
+Description=Route website TLS by SNI while preserving Amnezia on TCP 443
+Requires=nginx.service docker.service
+After=nginx.service docker.service network-online.target
+PartOf=nginx.service docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/eduard-site-https start
+ExecStop=/usr/local/sbin/eduard-site-https stop
+
+[Install]
+WantedBy=multi-user.target
