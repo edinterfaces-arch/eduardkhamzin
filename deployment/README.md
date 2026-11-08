@@ -30,7 +30,7 @@ This stops website HTTPS routing; the static page and certificates remain on dis
 
 Behance: exact profile-level Project Views and Appreciations from the public `/khamzin/info` page, scoped to profile analytics links to avoid mixing in collaborators or team statistics.
 
-Dribbble: sum of the 15 shots currently exposed in the public profile feed. The page explicitly shows the number of public works; this is not represented as a complete account total. Rounded view counts produce an approximate total marked `≈`. Login-only pagination is not used. Source failures retain previous values and their original timestamps; the service logs the error rather than replacing counters with zero.
+Dribbble: sum of the 15 shots currently exposed in the public profile feed. The number of public works and feed scope are stored as HTML data attributes. Rounded view counts produce an approximate total marked `≈`. Login-only pagination is not used. Source failures retain previous values and their original timestamps; the service logs the error rather than replacing counters with zero.
 
 ```sh
 systemctl start eduard-social-stats.service

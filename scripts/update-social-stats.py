@@ -139,14 +139,13 @@ def render(data):
         if not item:
             continue
         updated = escape(item['updated_at'])
-        scope = f"{item['posts']} публичных работ · просмотры округлены" if source == 'dribbble' else 'Общая статистика проектов'
+        scope = ' data-scope="public_feed" data-post-count="' + str(item['posts']) + '"' if source == 'dribbble' else ' data-scope="profile"'
         views = format_count(item['views'], item['approximate_views'])
         likes = format_count(item['likes'], item['approximate_likes'])
         views_label = 'просмотров' if item['approximate_views'] else plural(item['views'], 'просмотр', 'просмотра', 'просмотров')
         likes_label = 'лайков' if item['approximate_likes'] else plural(item['likes'], 'лайк', 'лайка', 'лайков')
-        rows.append(f'''<div class="stats-platform" title="Обновлено: {updated}">
+        rows.append(f'''<div class="stats-platform"{scope} title="Обновлено: {updated}">
         <div class="stats-row"><a href="{escape(item['url'], quote=True)}" target="_blank" rel="noopener noreferrer">{name}</a><span class="stat-number">{eye}{views}<span class="sr-only"> {views_label}</span></span><span class="stat-number">{heart}{likes}<span class="sr-only"> {likes_label}</span></span></div>
-        <p class="stats-scope">{scope}</p>
       </div>''')
     return '<section class="social-stats" aria-label="Просмотры и лайки работ">\n      ' + '\n      '.join(rows) + '\n    </section>' if rows else ''
 

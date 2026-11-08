@@ -16,7 +16,7 @@ class PublicCounterTests(unittest.TestCase):
         self.assertEqual(value['scope'], 'public_feed')
         value['updated_at'] = '2026-11-09T00:00:00+00:00'
         html = stats.render({'dribbble': value})
-        self.assertIn('2 публичных работ', html)
+        self.assertIn('data-post-count="2"', html)
         self.assertIn('≈8,0', html)
         with self.assertRaises(ValueError):
             stats.parse_number('Unavailable')

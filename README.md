@@ -5,10 +5,10 @@ A minimal static page with a name, role, profile links and publication counters:
 ```text
 Эдуард Хамзин
 AI powered Senior Product Designer
-Behance · Telegram
+Telegram
 ```
 
-System font, no external browser resources or JavaScript. Dribbble/Behance counters are refreshed server-side every six hours, with a last-successful-value cache. Dribbble is explicitly scoped to its publicly visible feed and rounded views are marked approximate. Edit the root `index.html`; the earlier portfolio source is inactive and not included in the build.
+System font, no external browser resources or JavaScript. Dribbble/Behance counters are refreshed server-side every six hours, with a last-successful-value cache. Dribbble counts come from its publicly visible feed; the scope is recorded in HTML data attributes and rounded views are marked approximate. Edit the root `index.html`; the earlier portfolio source is inactive and not included in the build.
 
 Open `index.html` directly, or run:
 
