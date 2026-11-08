@@ -1,0 +1,21 @@
+{
+  "dribbble": {
+    "views": 64580,
+    "likes": 434,
+    "approximate_views": true,
+    "approximate_likes": false,
+    "scope": "public_feed",
+    "posts": 15,
+    "url": "https://dribbble.com/adooarde",
+    "updated_at": "2026-11-08T23:36:39+00:00"
+  },
+  "behance": {
+    "views": 50540,
+    "likes": 4524,
+    "approximate_views": false,
+    "approximate_likes": false,
+    "scope": "profile",
+    "url": "https://www.behance.net/khamzin",
+    "updated_at": "2026-11-08T23:36:41+00:00"
+  }
+}

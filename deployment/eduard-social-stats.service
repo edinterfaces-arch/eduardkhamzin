@@ -1,0 +1,17 @@
+[Unit]
+Description=Refresh public Dribbble and Behance portfolio counters
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+StateDirectory=eduard-social-stats
+ExecStart=/usr/bin/python3 /usr/local/lib/eduard-site/update-social-stats.py --html /var/www/eduardkhamzin.ru/index.html --cache /var/lib/eduard-social-stats/stats.json
+TimeoutStartSec=90
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/www/eduardkhamzin.ru /var/lib/eduard-social-stats

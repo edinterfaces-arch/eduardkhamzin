@@ -1,6 +1,6 @@
 # eduardkhamzin.ru
 
-A single static page with a name, role and profile links:
+A minimal static page with a name, role, profile links and publication counters:
 
 ```text
 Эдуард Хамзин
@@ -8,7 +8,7 @@ AI powered Senior Product Designer
 Behance · Telegram
 ```
 
-System font, no external resources or JavaScript. Edit the root `index.html`; the earlier portfolio source is inactive and not included in the build.
+System font, no external browser resources or JavaScript. Dribbble/Behance counters are refreshed server-side every six hours, with a last-successful-value cache. Dribbble is explicitly scoped to its publicly visible feed and rounded views are marked approximate. Edit the root `index.html`; the earlier portfolio source is inactive and not included in the build.
 
 Open `index.html` directly, or run:
 

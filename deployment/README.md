@@ -23,3 +23,25 @@ systemctl disable --now eduard-site-https.service
 ```
 
 This stops website HTTPS routing; the static page and certificates remain on disk. Source configurations and the service/script are included in this directory.
+
+## Public portfolio counters
+
+`eduard-social-stats.timer` refreshes public profile statistics every six hours. It runs `eduard-social-stats.service` as www-data with a restricted filesystem. The Python script has no external dependencies. It fetches each source once per run, caches the last successful result in `/var/lib/eduard-social-stats/stats.json`, and atomically replaces only the marked statistics fragment in the site's HTML. No JavaScript, tracking or third-party requests run in visitors' browsers.
+
+Behance: exact profile-level Project Views and Appreciations from the public `/khamzin/info` page, scoped to profile analytics links to avoid mixing in collaborators or team statistics.
+
+Dribbble: sum of the 15 shots currently exposed in the public profile feed. The page explicitly shows the number of public works; this is not represented as a complete account total. Rounded view counts produce an approximate total marked `≈`. Login-only pagination is not used. Source failures retain previous values and their original timestamps; the service logs the error rather than replacing counters with zero.
+
+```sh
+systemctl start eduard-social-stats.service
+systemctl list-timers eduard-social-stats.timer
+journalctl -u eduard-social-stats.service
+```
+
+After changing the source template, deploy the HTML with both `social-stats` comment markers intact. The updater only writes between those markers. Edit visual styles in `index.html`, and counter parsing/rendering in `scripts/update-social-stats.py`. The repository's `data/social-stats.json` is a deployment snapshot; the live server cache is authoritative between deployments.
+
+Parser/cache tests:
+
+```sh
+python3 -m unittest discover -s tests -p 'test_social_stats.py'
+```
