@@ -28,19 +28,21 @@
     .links a { color: var(--muted); text-underline-offset: 3px; }
     a:focus-visible, button:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
     .codex-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
-    .codex-stats h2 { margin: 0; font-size: 13px; line-height: 1.6; font-weight: 500; color: var(--stats); }
-    .codex-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 10px 0 0; }
-    .codex-metrics > div { display: flex; flex-direction: column; }
-    .codex-metrics dt { margin-top: 4px; font-size: 11px; line-height: 1.5; color: var(--muted); }
-    .codex-metrics dd { order: -1; margin: 0; font-size: 18px; line-height: 1.4; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .codex-stats h2 { margin: 0; font-size: 12px; line-height: 1.6; font-weight: 400; color: var(--stats); }
+    .codex-metrics { margin: 8px 0 0; }
+    .codex-metrics > div { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: baseline; padding: 7px 0; }
+    .codex-metrics > div + div { border-top: 1px solid var(--line); }
+    .codex-metrics dt { font-size: 12px; line-height: 1.6; color: var(--muted); }
+    .codex-metrics dd { margin: 0; font-size: 12px; line-height: 1.6; font-weight: 400; color: var(--stats); text-align: right; }
+    .codex-metrics dd, .stat-number { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
     .social-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
-    .stats-platform + .stats-platform { margin-top: 14px; }
-    .stats-row { display: grid; grid-template-columns: 1fr auto auto; gap: 18px; align-items: center; font-size: 13px; line-height: 1.6; }
+    .stats-platform + .stats-platform { border-top: 1px solid var(--line); }
+    .stats-row { display: grid; grid-template-columns: minmax(78px, 1fr) 76px 56px; gap: 12px; align-items: center; min-height: 44px; padding: 7px 0; font-size: 12px; line-height: 1.6; }
     .stats-profile { display: inline-flex; align-items: center; gap: 6px; }
     .award-badge { display: block; width: 18px; height: 30px; flex-shrink: 0; }
     .stats-row a { color: var(--stats); text-decoration: underline; text-underline-offset: 3px; }
     .stats-row a:hover { text-decoration: underline; text-underline-offset: 3px; }
-    .stat-number { display: inline-flex; align-items: center; gap: 5px; color: var(--stats); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .stat-number { display: inline-flex; justify-self: end; align-items: center; gap: 5px; color: var(--stats); font-size: 12px; white-space: nowrap; }
     .stat-number svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.5; flex-shrink: 0; }
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
     @media (max-width: 350px) { .stats-row { gap: 12px; font-size: 12px; } }
