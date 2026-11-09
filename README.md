@@ -19,4 +19,4 @@ npm run preview
 
 The build copies only this standalone page and security headers to `out/`. Timeweb Cloud serves the same HTML using Nginx. See [deployment notes](deployment/README.md).
 
-Codex lifetime-token and streak figures are supplied manually in the `.codex-stats` section of `index.html`; they are independent of the automatic social-counter refresh.
+The Codex current-streak figure is supplied manually in the `.codex-stats` section of `index.html`; they are independent of the automatic social-counter refresh.
