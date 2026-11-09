@@ -1,5 +1,5 @@
 [Unit]
-Description=Refresh public Dribbble and Behance portfolio counters
+Description=Refresh public GitHub, Dribbble and Behance portfolio counters
 Wants=network-online.target
 After=network-online.target
 

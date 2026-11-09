@@ -7,7 +7,7 @@
     "scope": "public_feed",
     "posts": 15,
     "url": "https://dribbble.com/adooarde",
-    "updated_at": "2026-11-08T23:36:39+00:00"
+    "updated_at": "2026-11-09T00:49:38+00:00"
   },
   "behance": {
     "views": 50540,
@@ -16,6 +16,14 @@
     "approximate_likes": false,
     "scope": "profile",
     "url": "https://www.behance.net/khamzin",
-    "updated_at": "2026-11-08T23:36:41+00:00"
+    "updated_at": "2026-11-09T00:49:40+00:00"
+  },
+  "github": {
+    "contributions": 83,
+    "since": "2026-09-01",
+    "through": "2026-11-09",
+    "scope": "public_profile",
+    "url": "https://github.com/edinterfaces-arch",
+    "updated_at": "2026-11-09T00:49:40+00:00"
   }
 }

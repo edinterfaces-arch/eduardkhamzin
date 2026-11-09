@@ -1,10 +1,10 @@
 [Unit]
-Description=Refresh portfolio counters every six hours
+Description=Refresh portfolio counters daily
 
 [Timer]
-OnCalendar=*-*-* 00,06,12,18:00:00
+OnCalendar=*-*-* 09:00:00 Asia/Yekaterinburg
 Persistent=true
-RandomizedDelaySec=5m
+RandomizedDelaySec=0
 Unit=eduard-social-stats.service
 
 [Install]

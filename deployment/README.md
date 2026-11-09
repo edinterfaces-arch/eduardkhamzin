@@ -26,7 +26,7 @@ This stops website HTTPS routing; the static page and certificates remain on dis
 
 ## Public portfolio counters
 
-`eduard-social-stats.timer` refreshes public profile statistics every six hours. It runs `eduard-social-stats.service` as www-data with a restricted filesystem. The Python script has no external dependencies. It fetches each source once per run, caches the last successful result in `/var/lib/eduard-social-stats/stats.json`, and atomically replaces only the marked statistics fragment in the site's HTML. Statistics require no browser-side requests, tracking or third-party resources. A separate local theme script controls the appearance switch.
+`eduard-social-stats.timer` refreshes public profile statistics daily at 09:00 Asia/Yekaterinburg. It runs `eduard-social-stats.service` as www-data with a restricted filesystem. The Python script has no external dependencies. It fetches each source once per run, caches the last successful result in `/var/lib/eduard-social-stats/stats.json`, and atomically replaces only the marked statistics fragment in the site's HTML. Statistics require no browser-side requests, tracking or third-party resources. A separate local theme script controls the appearance switch.
 
 Behance: exact profile-level Project Views and Appreciations from the public `/khamzin/info` page, scoped to profile analytics links to avoid mixing in collaborators or team statistics.
 
@@ -45,3 +45,5 @@ Parser/cache tests:
 ```sh
 python3 -m unittest discover -s tests -p 'test_social_stats.py'
 ```
+
+GitHub contributions are summed from the public contribution calendar from September 1, 2026 onward (including subsequent years). They may differ from signed-in/private totals. Both the social fragment and the marked GitHub number are updated atomically. Codex streak remains manually supplied: the public ChatGPT profile does not expose that number. Source failures retain each last successful value.

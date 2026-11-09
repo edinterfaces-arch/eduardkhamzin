@@ -1,6 +1,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
+from datetime import date
 
 spec = importlib.util.spec_from_file_location('stats', Path(__file__).parents[1] / 'scripts/update-social-stats.py')
 stats = importlib.util.module_from_spec(spec)
@@ -28,13 +29,33 @@ class PublicCounterTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             stats.parse_behance(document.replace('Appreciations - 4524 appreciations', 'Unavailable'))
 
+    def test_github_counts_only_requested_dates_and_rejects_missing_days(self):
+        document = '<td id="old" data-date="2026-08-31"></td><tool-tip for="old">99 contributions on August 31st.</tool-tip><td id="one" data-date="2026-09-01"></td><tool-tip for="one">3 contributions on September 1st.</tool-tip><td id="two" data-date="2026-09-02"></td><tool-tip for="two">No contributions on September 2nd.</tool-tip>'
+        self.assertEqual(stats.parse_github(document, date(2026, 9, 1), date(2026, 9, 2)), 3)
+        with self.assertRaises(ValueError):
+            stats.parse_github(document, date(2026, 9, 1), date(2026, 9, 3))
+        with self.assertRaises(ValueError):
+            stats.parse_github(document.replace('3 contributions', 'Unavailable'), date(2026, 9, 1), date(2026, 9, 2))
+
+    def test_github_spans_year_boundaries(self):
+        urls = []
+        def calendar(url):
+            urls.append(url)
+            import urllib.parse
+            query = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
+            start, end = date.fromisoformat(query['from'][0]), date.fromisoformat(query['to'][0])
+            return ''.join(f'<td id="d{i}" data-date="{start + stats.timedelta(days=i)}"></td><tool-tip for="d{i}">1 contribution on date.</tool-tip>' for i in range((end - start).days + 1))
+        value = stats.fetch_github(calendar, date(2027, 1, 2))
+        self.assertEqual(value['contributions'], 124)
+        self.assertEqual(len(urls), 2)
+
     def test_outage_preserves_last_successful_values_and_timestamp(self):
         previous = {'dribbble': {'views': 100, 'likes': 10, 'updated_at': 'original'}}
         def unavailable(url):
             raise OSError('source unavailable')
         value, errors = stats.refresh(previous, unavailable)
         self.assertEqual(value, previous)
-        self.assertEqual(len(errors), 2)
+        self.assertEqual(len(errors), 3)
 
 
 if __name__ == '__main__':

@@ -5,7 +5,8 @@ No tokens, visitor tracking, browser-side fetches or additional dependencies.
 Dribbble's public feed is explicitly scoped, never described as all-time totals.
 """
 import argparse
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from decimal import Decimal
 from html import escape
 from html.parser import HTMLParser
@@ -104,6 +105,63 @@ def fetch(url):
         return document.decode('utf-8')
 
 
+
+class GitHubCalendarParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.days = {}
+        self.counts = {}
+        self.tooltip = None
+        self.text = ''
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == 'td' and 'data-date' in attrs:
+            self.days[attrs['id']] = date.fromisoformat(attrs['data-date'])
+        if tag == 'tool-tip':
+            self.tooltip = attrs.get('for')
+            self.text = ''
+
+    def handle_data(self, data):
+        if self.tooltip:
+            self.text += data
+
+    def handle_endtag(self, tag):
+        if tag == 'tool-tip' and self.tooltip:
+            match = re.match(r'(No|[0-9,]+) contributions? on ', self.text.strip())
+            if match:
+                self.counts[self.tooltip] = 0 if match[1] == 'No' else int(match[1].replace(',', ''))
+            self.tooltip = None
+
+
+def parse_github(document, start, end):
+    parser = GitHubCalendarParser()
+    parser.feed(document)
+    days = {}
+    for identifier, day in parser.days.items():
+        if start <= day <= end:
+            if identifier not in parser.counts or day in days:
+                raise ValueError('Incomplete or duplicate GitHub contribution day')
+            days[day] = parser.counts[identifier]
+    if len(days) != (end - start).days + 1:
+        raise ValueError('GitHub calendar does not cover requested dates')
+    return sum(days.values())
+
+
+def fetch_github(fetcher, today=None):
+    today = today or datetime.now(ZoneInfo('Asia/Yekaterinburg')).date()
+    start = date(2026, 9, 1)
+    if today < start:
+        raise ValueError('Contribution start date is in the future')
+    total = 0
+    for year in range(start.year, today.year + 1):
+        first, last = max(start, date(year, 1, 1)), min(today, date(year, 12, 31))
+        url = f'https://github.com/users/edinterfaces-arch/contributions?from={first}&to={last}'
+        total += parse_github(fetcher(url), first, last)
+    return dict(contributions=total, since=start.isoformat(), through=today.isoformat(),
+                scope='public_profile', url='https://github.com/edinterfaces-arch')
+
+
 def refresh(previous, fetcher=fetch):
     result = dict(previous)
     errors = []
@@ -115,6 +173,12 @@ def refresh(previous, fetcher=fetch):
         except Exception as error:
             # Keep the last successfully verified counters AND their timestamp.
             errors.append(f'{source}: {type(error).__name__}: {error}')
+    try:
+        value = fetch_github(fetcher)
+        value['updated_at'] = datetime.now(timezone.utc).isoformat(timespec='seconds')
+        result['github'] = value
+    except Exception as error:
+        errors.append(f'github: {type(error).__name__}: {error}')
     return result, errors
 
 
@@ -167,6 +231,14 @@ def update(html_path, cache_path, render_only=False):
     if data:
         fragment = START + '\n    ' + render(data) + '\n    ' + END
         rendered = re.sub(re.escape(START) + r'.*?' + re.escape(END), lambda _: fragment, html, flags=re.S)
+        if 'github' in data:
+            value = data['github']
+            count = format_count(value['contributions'], False)
+            github_fragment = f'<!-- github-stats:start -->{count}<!-- github-stats:end -->'
+            if rendered.count('<!-- github-stats:start -->') != 1 or rendered.count('<!-- github-stats:end -->') != 1:
+                raise ValueError('Expected exactly one GitHub statistics slot')
+            rendered = re.sub(r'<!-- github-stats:start -->.*?<!-- github-stats:end -->',
+                              lambda _: github_fragment, rendered, flags=re.S)
         atomic_write(cache_path, json.dumps(data, ensure_ascii=False, indent=2) + '\n')
         atomic_write(html_path, rendered)
     for error in errors:
