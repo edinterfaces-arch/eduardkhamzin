@@ -205,10 +205,8 @@ def render(data):
         views = format_count(item['views'], item['approximate_views'])
         award = '<svg class="award-badge" viewBox="0 0 24 40" role="img" aria-label="Награда Behance"><title>Награда Behance</title><path d="M0 0H24V39L12 32L0 39Z" fill="#ae945b"/><text x="12" y="24" fill="#fff" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Gr</text></svg>' if source == 'behance' else ''
         hidden = ' hidden' if source == 'dribbble' else ''
-        rows.append(f'''<div class="stats-platform"{scope}{hidden} title="Обновлено: {updated}">
-        <div class="stats-row"><span class="stats-profile"><a href="{escape(item['url'], quote=True)}" target="_blank" rel="noopener noreferrer">{name}</a>{award}</span><span class="stat-number">{views} <span class="streak-label">views</span></span></div>
-      </div>''')
-    return '<section class="social-stats" lang="en" aria-label="Project views">\n      ' + '\n      '.join(rows) + '\n    </section>' if rows else ''
+        rows.append(f'''<div class="stats-row"{scope}{hidden} title="Обновлено: {updated}"><span class="stats-profile"><a href="{escape(item['url'], quote=True)}" target="_blank" rel="noopener noreferrer">{name}</a>{award}</span><span class="stat-number">{views} <span class="streak-label">views</span></span></div>''')
+    return '\n      '.join(rows)
 
 
 def atomic_write(path, text):

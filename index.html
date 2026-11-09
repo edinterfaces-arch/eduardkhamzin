@@ -8,6 +8,13 @@
   <meta name="description" content="Эдуард Хамзин — Senior Product Designer. Designing and building with AI.">
   <script src="/assets/theme.js"></script>
   <style>
+    :root {
+      --space-xs: 4px; --space-sm: 8px; --space-md: 12px; --space-lg: 24px; --space-xl: 32px;
+      --type-name: 24px; --leading-name: 28px;
+      --type-role: 14px; --leading-role: 20px;
+      --type-caption: 13px; --leading-caption: 18px;
+      --type-stat: 12px; --leading-stat: 16px;
+    }
     * { box-sizing: border-box; }
     html { --bg: #fff; --fg: #111; --muted: #666; --stats: #555; --line: #eee; --track: #e5e5e5; --thumb: #fff; background: var(--bg); color: var(--fg); font-family: system-ui, sans-serif; color-scheme: light; }
     html[data-theme="dark"] { --bg: #141414; --fg: #f3f3f3; --muted: #aaa; --stats: #bbb; --line: #303030; --track: #505050; --thumb: #f3f3f3; color-scheme: dark; }
@@ -21,31 +28,25 @@
     .theme-switch[aria-checked="true"] .sun, .theme-switch[aria-checked="false"] .moon { display: none; }
     body { margin: 0; min-height: 100svh; display: grid; place-items: center; padding: 24px; }
     main { width: 262.55px; max-width: 100%; text-align: center; }
-    .portrait { display: block; width: 164px; height: 164px; object-fit: contain; border-radius: 50%; margin: 0 auto 32px; }
-    h1 { margin: 0 0 10px; font-size: 24px; font-weight: 500; line-height: 1.4; }
-    p { margin: 0; font-size: clamp(13px, 3.6vw, 16px); font-weight: 400; line-height: 1.6; }
-    .approach { margin-top: 4px; font-size: 13px; color: var(--muted); }
-    .links { display: flex; justify-content: center; gap: 18px; margin-top: 10px; font-size: 14px; }
+    .portrait { display: block; width: 164px; height: 164px; object-fit: contain; border-radius: 50%; margin: 0 auto var(--space-xl); }
+    h1 { margin: 0 0 var(--space-sm); font-size: var(--type-name); font-weight: 500; line-height: var(--leading-name); }
+    p { margin: 0; font-size: var(--type-role); font-weight: 400; line-height: var(--leading-role); }
+    .approach { margin-top: var(--space-xs); font-size: var(--type-caption); line-height: var(--leading-caption); color: var(--muted); }
+    .links { display: flex; justify-content: center; gap: var(--space-md); margin-top: var(--space-md); font-size: var(--type-caption); line-height: var(--leading-caption); }
     .links a { color: var(--muted); text-underline-offset: 3px; }
     a:focus-visible, button:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
-    .codex-stats { margin: 24px auto 0; padding-top: 0; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
-    .codex-streak { grid-column: 2; }
-    .codex-stats .stats-row + .stats-row { border-top: 1px solid var(--line); }
-    .github-count { grid-column: 2; }
-    .streak-label { font-family: var(--streak-label-font, system-ui, sans-serif); color: var(--muted); }
+    .profile-stats { margin-top: var(--space-lg); text-align: left; }
+    .stats-row { display: grid; grid-template-columns: minmax(78px, 1fr) auto; gap: var(--space-md); align-items: center; min-height: 44px; padding: 6px 0; border-top: 1px solid var(--line); font-size: var(--type-stat); line-height: var(--leading-stat); }
+    .stats-row[hidden] { display: none; }
+    .streak-label { font-family: system-ui, sans-serif; color: var(--muted); }
     .stat-number { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
-    .social-stats { margin: 24px auto 0; padding-top: 0; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
-    .codex-stats + .social-stats { margin-top: 0; padding-top: 0; }
-    .stats-platform + .stats-platform { border-top: 1px solid var(--line); }
-    .stats-row { display: grid; grid-template-columns: minmax(78px, 1fr) auto; gap: 12px; align-items: center; min-height: 44px; padding: 7px 0; font-size: 12px; line-height: 1.6; }
     .stats-profile { display: inline-flex; align-items: center; gap: 6px; }
     .award-badge { display: block; width: 18px; height: 30px; flex-shrink: 0; }
     .stats-row a { color: var(--stats); text-decoration: underline; text-underline-offset: 3px; }
     .stats-row a:hover { text-decoration: underline; text-underline-offset: 3px; }
-    .stat-number { display: inline-flex; justify-self: end; align-items: center; gap: 5px; color: var(--stats); font-size: 12px; white-space: nowrap; }
+    .stat-number { display: inline-flex; justify-self: end; align-items: center; gap: 5px; color: var(--stats); font-size: var(--type-stat); white-space: nowrap; }
     .stat-number svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.5; flex-shrink: 0; }
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-    @media (max-width: 350px) { .stats-row { gap: 12px; font-size: 12px; } }
   </style>
 </head>
 <body>
@@ -61,7 +62,7 @@
     <p lang="en">Senior Product Designer</p>
     <p class="approach" lang="en">Designing and building with AI.</p>
     <p class="links"><a href="https://t.me/eduard_khamzin" target="_blank" rel="noopener noreferrer">Telegram</a></p>
-    <section class="codex-stats" lang="en" aria-label="Coding activity">
+    <section class="profile-stats" lang="en" aria-label="Profile statistics">
       <div class="stats-row">
         <span class="stats-profile"><a href="https://chatgpt.com/u/iriska1337" target="_blank" rel="noopener noreferrer">Codex</a></span>
         <span class="stat-number codex-streak">14 <span class="streak-label">days streak</span></span>
@@ -70,17 +71,11 @@
         <span class="stats-profile"><a href="https://github.com/edinterfaces-arch" target="_blank" rel="noopener noreferrer">GitHub</a></span>
         <div class="stat-number github-count"><span><!-- github-stats:start -->83<!-- github-stats:end --></span><span class="streak-label">contributions</span></div>
       </div>
-    </section>
     <!-- social-stats:start -->
-    <section class="social-stats" lang="en" aria-label="Project views">
-      <div class="stats-platform" data-scope="profile" title="Обновлено: 2026-11-09T00:49:40+00:00">
-        <div class="stats-row"><span class="stats-profile"><a href="https://www.behance.net/khamzin" target="_blank" rel="noopener noreferrer">Behance</a><svg class="award-badge" viewBox="0 0 24 40" role="img" aria-label="Награда Behance"><title>Награда Behance</title><path d="M0 0H24V39L12 32L0 39Z" fill="#ae945b"/><text x="12" y="24" fill="#fff" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Gr</text></svg></span><span class="stat-number">50 540 <span class="streak-label">views</span></span></div>
-      </div>
-      <div class="stats-platform" data-scope="public_feed" data-post-count="15" hidden title="Обновлено: 2026-11-09T00:49:38+00:00">
-        <div class="stats-row"><span class="stats-profile"><a href="https://dribbble.com/adooarde" target="_blank" rel="noopener noreferrer">Dribbble</a></span><span class="stat-number">64 600 <span class="streak-label">views</span></span></div>
-      </div>
-    </section>
+    <div class="stats-row" data-scope="profile" title="Обновлено: 2026-11-09T00:49:40+00:00"><span class="stats-profile"><a href="https://www.behance.net/khamzin" target="_blank" rel="noopener noreferrer">Behance</a><svg class="award-badge" viewBox="0 0 24 40" role="img" aria-label="Награда Behance"><title>Награда Behance</title><path d="M0 0H24V39L12 32L0 39Z" fill="#ae945b"/><text x="12" y="24" fill="#fff" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Gr</text></svg></span><span class="stat-number">50 540 <span class="streak-label">views</span></span></div>
+      <div class="stats-row" data-scope="public_feed" data-post-count="15" hidden title="Обновлено: 2026-11-09T00:49:38+00:00"><span class="stats-profile"><a href="https://dribbble.com/adooarde" target="_blank" rel="noopener noreferrer">Dribbble</a></span><span class="stat-number">64 600 <span class="streak-label">views</span></span></div>
     <!-- social-stats:end -->
+    </section>
   </main>
 </body>
 </html>
