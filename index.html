@@ -27,23 +27,16 @@
     .links { display: flex; justify-content: center; gap: 18px; margin-top: 10px; font-size: 14px; }
     .links a { color: var(--muted); text-underline-offset: 3px; }
     a:focus-visible, button:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
-    .codex-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
-    .codex-streak { grid-column: 2 / -1; }
+    .codex-stats { margin: 24px auto 0; padding-top: 0; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
+    .codex-streak { grid-column: 2; }
     .codex-stats .stats-row + .stats-row { border-top: 1px solid var(--line); }
-    .github-count { grid-column: 2 / -1; }
-    .metric-info { position: relative; font-family: system-ui, sans-serif; }
-    .metric-info summary { display: grid; place-items: center; width: 24px; height: 28px; margin-right: -5px; cursor: pointer; list-style: none; color: var(--muted); }
-    .metric-info summary::-webkit-details-marker { display: none; }
-    .metric-info summary::before { content: "?"; display: grid; place-items: center; width: 13px; height: 13px; border: 1px solid var(--muted); border-radius: 50%; font-size: 9px; line-height: 1; }
-    .metric-info summary:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
-    .metric-info .metric-note { position: absolute; right: -5px; bottom: calc(100% + 6px); z-index: 2; padding: 8px 10px; border: 1px solid var(--line); background: var(--bg); color: var(--muted); font-size: 11px; line-height: 1.5; white-space: nowrap; }
-    .metric-info:not([open]) .metric-note { display: none; }
+    .github-count { grid-column: 2; }
     .streak-label { font-family: var(--streak-label-font, system-ui, sans-serif); color: var(--muted); }
     .stat-number { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
-    .social-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
+    .social-stats { margin: 24px auto 0; padding-top: 0; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
     .codex-stats + .social-stats { margin-top: 0; padding-top: 0; }
     .stats-platform + .stats-platform { border-top: 1px solid var(--line); }
-    .stats-row { display: grid; grid-template-columns: minmax(78px, 1fr) 76px 56px; gap: 12px; align-items: center; min-height: 44px; padding: 7px 0; font-size: 12px; line-height: 1.6; }
+    .stats-row { display: grid; grid-template-columns: minmax(78px, 1fr) auto; gap: 12px; align-items: center; min-height: 44px; padding: 7px 0; font-size: 12px; line-height: 1.6; }
     .stats-profile { display: inline-flex; align-items: center; gap: 6px; }
     .award-badge { display: block; width: 18px; height: 30px; flex-shrink: 0; }
     .stats-row a { color: var(--stats); text-decoration: underline; text-underline-offset: 3px; }
@@ -69,20 +62,20 @@
     <section class="codex-stats" lang="en" aria-label="Coding activity">
       <div class="stats-row">
         <span class="stats-profile"><a href="https://chatgpt.com/u/iriska1337" target="_blank" rel="noopener noreferrer">Codex</a></span>
-        <span class="stat-number codex-streak" title="Current streak"><span class="streak-label">Current streak</span> 14 days</span>
+        <span class="stat-number codex-streak">14 <span class="streak-label">days streak</span></span>
       </div>
       <div class="stats-row">
         <span class="stats-profile"><a href="https://github.com/edinterfaces-arch" target="_blank" rel="noopener noreferrer">GitHub</a></span>
-        <div class="stat-number github-count"><span>138</span><span class="streak-label">contributions</span><details class="metric-info"><summary aria-label="Contribution period"></summary><span class="metric-note">Since September 2026</span></details></div>
+        <div class="stat-number github-count"><span>138</span><span class="streak-label">contributions</span></div>
       </div>
     </section>
     <!-- social-stats:start -->
-    <section class="social-stats" aria-label="Просмотры и лайки работ">
+    <section class="social-stats" lang="en" aria-label="Project views">
       <div class="stats-platform" data-scope="profile" title="Обновлено: 2026-11-08T23:36:41+00:00">
-        <div class="stats-row"><span class="stats-profile"><a href="https://www.behance.net/khamzin" target="_blank" rel="noopener noreferrer">Behance</a><svg class="award-badge" viewBox="0 0 24 40" role="img" aria-label="Награда Behance"><title>Награда Behance</title><path d="M0 0H24V39L12 32L0 39Z" fill="#ae945b"/><text x="12" y="24" fill="#fff" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Gr</text></svg></span><span class="stat-number"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>50 540<span class="sr-only"> просмотров</span></span><span class="stat-number"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>4 524<span class="sr-only"> лайка</span></span></div>
+        <div class="stats-row"><span class="stats-profile"><a href="https://www.behance.net/khamzin" target="_blank" rel="noopener noreferrer">Behance</a><svg class="award-badge" viewBox="0 0 24 40" role="img" aria-label="Награда Behance"><title>Награда Behance</title><path d="M0 0H24V39L12 32L0 39Z" fill="#ae945b"/><text x="12" y="24" fill="#fff" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Gr</text></svg></span><span class="stat-number">50 540 <span class="streak-label">views</span></span></div>
       </div>
       <div class="stats-platform" data-scope="public_feed" data-post-count="15" hidden title="Обновлено: 2026-11-08T23:36:39+00:00">
-        <div class="stats-row"><span class="stats-profile"><a href="https://dribbble.com/adooarde" target="_blank" rel="noopener noreferrer">Dribbble</a></span><span class="stat-number"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>64 600<span class="sr-only"> просмотров</span></span><span class="stat-number"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>434<span class="sr-only"> лайка</span></span></div>
+        <div class="stats-row"><span class="stats-profile"><a href="https://dribbble.com/adooarde" target="_blank" rel="noopener noreferrer">Dribbble</a></span><span class="stat-number">64 600 <span class="streak-label">views</span></span></div>
       </div>
     </section>
     <!-- social-stats:end -->

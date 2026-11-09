@@ -132,8 +132,6 @@ def plural(value, one, few, many):
 
 def render(data):
     rows = []
-    eye = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>'
-    heart = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>'
     for source, name in [('behance', 'Behance'), ('dribbble', 'Dribbble')]:
         item = data.get(source)
         if not item:
@@ -141,15 +139,12 @@ def render(data):
         updated = escape(item['updated_at'])
         scope = ' data-scope="public_feed" data-post-count="' + str(item['posts']) + '"' if source == 'dribbble' else ' data-scope="profile"'
         views = format_count(item['views'], item['approximate_views'])
-        likes = format_count(item['likes'], item['approximate_likes'])
-        views_label = 'просмотров' if item['approximate_views'] else plural(item['views'], 'просмотр', 'просмотра', 'просмотров')
-        likes_label = 'лайков' if item['approximate_likes'] else plural(item['likes'], 'лайк', 'лайка', 'лайков')
         award = '<svg class="award-badge" viewBox="0 0 24 40" role="img" aria-label="Награда Behance"><title>Награда Behance</title><path d="M0 0H24V39L12 32L0 39Z" fill="#ae945b"/><text x="12" y="24" fill="#fff" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Gr</text></svg>' if source == 'behance' else ''
         hidden = ' hidden' if source == 'dribbble' else ''
         rows.append(f'''<div class="stats-platform"{scope}{hidden} title="Обновлено: {updated}">
-        <div class="stats-row"><span class="stats-profile"><a href="{escape(item['url'], quote=True)}" target="_blank" rel="noopener noreferrer">{name}</a>{award}</span><span class="stat-number">{eye}{views}<span class="sr-only"> {views_label}</span></span><span class="stat-number">{heart}{likes}<span class="sr-only"> {likes_label}</span></span></div>
+        <div class="stats-row"><span class="stats-profile"><a href="{escape(item['url'], quote=True)}" target="_blank" rel="noopener noreferrer">{name}</a>{award}</span><span class="stat-number">{views} <span class="streak-label">views</span></span></div>
       </div>''')
-    return '<section class="social-stats" aria-label="Просмотры и лайки работ">\n      ' + '\n      '.join(rows) + '\n    </section>' if rows else ''
+    return '<section class="social-stats" lang="en" aria-label="Project views">\n      ' + '\n      '.join(rows) + '\n    </section>' if rows else ''
 
 
 def atomic_write(path, text):
