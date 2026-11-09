@@ -29,6 +29,9 @@
     a:focus-visible, button:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
     .codex-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
     .codex-streak { grid-column: 2 / -1; }
+    .codex-stats .stats-row + .stats-row { border-top: 1px solid var(--line); }
+    .github-count { grid-column: 2 / -1; flex-direction: column; align-items: flex-end; gap: 0; }
+    .github-period { font-family: system-ui, sans-serif; font-size: 10px; color: var(--muted); }
     .streak-label { font-family: var(--streak-label-font, system-ui, sans-serif); color: var(--muted); }
     .stat-number { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
     .social-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
@@ -57,10 +60,14 @@
     <h1>Эдуард Хамзин</h1>
     <p lang="en">AI powered Senior Product Designer</p>
     <p class="links"><a href="https://t.me/eduard_khamzin" target="_blank" rel="noopener noreferrer">Telegram</a></p>
-    <section class="codex-stats" lang="en" aria-label="Codex current streak">
+    <section class="codex-stats" lang="en" aria-label="Coding activity">
       <div class="stats-row">
         <span class="stats-profile"><a href="https://chatgpt.com/u/iriska1337" target="_blank" rel="noopener noreferrer">Codex</a></span>
         <span class="stat-number codex-streak" title="Current streak"><span class="streak-label">Current streak</span> 14 days</span>
+      </div>
+      <div class="stats-row">
+        <span class="stats-profile"><a href="https://github.com/edinterfaces-arch" target="_blank" rel="noopener noreferrer">GitHub</a></span>
+        <span class="stat-number github-count"><span>138 <span class="streak-label">contributions</span></span><span class="github-period">Since September</span></span>
       </div>
     </section>
     <!-- social-stats:start -->
