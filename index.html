@@ -27,6 +27,12 @@
     .links { display: flex; justify-content: center; gap: 18px; margin-top: 10px; font-size: 14px; }
     .links a { color: var(--muted); text-underline-offset: 3px; }
     a:focus-visible, button:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
+    .codex-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
+    .codex-stats h2 { margin: 0; font-size: 13px; line-height: 1.6; font-weight: 500; color: var(--stats); }
+    .codex-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 10px 0 0; }
+    .codex-metrics > div { display: flex; flex-direction: column; }
+    .codex-metrics dt { margin-top: 4px; font-size: 11px; line-height: 1.5; color: var(--muted); }
+    .codex-metrics dd { order: -1; margin: 0; font-size: 18px; line-height: 1.4; font-weight: 500; font-variant-numeric: tabular-nums; }
     .social-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
     .stats-platform + .stats-platform { margin-top: 14px; }
     .stats-row { display: grid; grid-template-columns: 1fr auto auto; gap: 18px; align-items: center; font-size: 13px; line-height: 1.6; }
@@ -52,6 +58,13 @@
     <h1>Эдуард Хамзин</h1>
     <p lang="en">AI powered Senior Product Designer</p>
     <p class="links"><a href="https://t.me/eduard_khamzin" target="_blank" rel="noopener noreferrer">Telegram</a></p>
+    <section class="codex-stats" lang="en" aria-labelledby="codex-title">
+      <h2 id="codex-title">Codex</h2>
+      <dl class="codex-metrics">
+        <div><dt>Lifetime tokens</dt><dd>1.1bn</dd></div>
+        <div><dt>Current streak</dt><dd>14 days</dd></div>
+      </dl>
+    </section>
     <!-- social-stats:start -->
     <section class="social-stats" aria-label="Просмотры и лайки работ">
       <div class="stats-platform" data-scope="profile" title="Обновлено: 2026-11-08T23:36:41+00:00">
