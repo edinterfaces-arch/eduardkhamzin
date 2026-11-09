@@ -134,7 +134,7 @@ def render(data):
     rows = []
     eye = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>'
     heart = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>'
-    for source, name in [('dribbble', 'Dribbble'), ('behance', 'Behance')]:
+    for source, name in [('behance', 'Behance'), ('dribbble', 'Dribbble')]:
         item = data.get(source)
         if not item:
             continue
