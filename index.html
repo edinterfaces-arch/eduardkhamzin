@@ -30,8 +30,14 @@
     .codex-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
     .codex-streak { grid-column: 2 / -1; }
     .codex-stats .stats-row + .stats-row { border-top: 1px solid var(--line); }
-    .github-count { grid-column: 2 / -1; flex-direction: column; align-items: flex-end; gap: 0; }
-    .github-period { font-family: system-ui, sans-serif; font-size: 10px; color: var(--muted); }
+    .github-count { grid-column: 2 / -1; }
+    .metric-info { position: relative; font-family: system-ui, sans-serif; }
+    .metric-info summary { display: grid; place-items: center; width: 24px; height: 28px; margin-right: -5px; cursor: pointer; list-style: none; color: var(--muted); }
+    .metric-info summary::-webkit-details-marker { display: none; }
+    .metric-info summary::before { content: "?"; display: grid; place-items: center; width: 13px; height: 13px; border: 1px solid var(--muted); border-radius: 50%; font-size: 9px; line-height: 1; }
+    .metric-info summary:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+    .metric-info .metric-note { position: absolute; right: -5px; bottom: calc(100% + 6px); z-index: 2; padding: 8px 10px; border: 1px solid var(--line); background: var(--bg); color: var(--muted); font-size: 11px; line-height: 1.5; white-space: nowrap; }
+    .metric-info:not([open]) .metric-note { display: none; }
     .streak-label { font-family: var(--streak-label-font, system-ui, sans-serif); color: var(--muted); }
     .stat-number { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
     .social-stats { margin: 24px auto 0; padding-top: 18px; border-top: 1px solid var(--line); max-width: 330px; text-align: left; }
@@ -67,7 +73,7 @@
       </div>
       <div class="stats-row">
         <span class="stats-profile"><a href="https://github.com/edinterfaces-arch" target="_blank" rel="noopener noreferrer">GitHub</a></span>
-        <span class="stat-number github-count"><span>138 <span class="streak-label">contributions</span></span><span class="github-period">Since September</span></span>
+        <div class="stat-number github-count"><span>138</span><span class="streak-label">contributions</span><details class="metric-info"><summary aria-label="Contribution period"></summary><span class="metric-note">Since September 2026</span></details></div>
       </div>
     </section>
     <!-- social-stats:start -->
