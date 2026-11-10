@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch for AI token totals uploaded from the laptop
+
+[Path]
+PathChanged=/var/lib/eduard-ai-tokens/tokens.json
+Unit=eduard-ai-tokens-render.service
+
+[Install]
+WantedBy=multi-user.target

@@ -10,3 +10,4 @@ playwright-report/
 .next/
 out/
 *.tsbuildinfo
+__pycache__/

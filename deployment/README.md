@@ -46,4 +46,18 @@ Parser/cache tests:
 python3 -m unittest discover -s tests -p 'test_social_stats.py'
 ```
 
-GitHub contributions are summed from the public contribution calendar from September 1, 2026 onward (including subsequent years). They may differ from signed-in/private totals. Both the social fragment and the marked GitHub number are updated atomically. Codex streak remains manually supplied: the public ChatGPT profile does not expose that number. Source failures retain each last successful value.
+GitHub contributions are summed from the public contribution calendar from September 1, 2026 onward (including subsequent years). They may differ from signed-in/private totals. Both the social fragment and the marked GitHub number are updated atomically. Source failures retain each last successful value.
+
+## AI token counter (Codex + Claude)
+
+The only counter whose source is not public: Codex and Claude Code keep usage logs on the owner's Mac. `deployment/mac/setup-ai-tokens.sh` (run once on the Mac) installs `ccusage` into `~/.eduard-ai-tokens`, creates an upload key, runs `deployment/server/setup-ai-tokens.sh` on the server over the root login, and schedules `push-ai-tokens.sh` with launchd every 3 hours. Each run sends `{"codex": N, "claude": N}` (`ccusage codex|claude daily --json` → `totals.totalTokens`).
+
+On the server, the `tokenpush` user's only key is restricted (`restrict,command=...`) to `receive-ai-tokens.py`, which validates the two integers and atomically writes `/var/lib/eduard-ai-tokens/tokens.json`. `eduard-ai-tokens-render.path` re-renders the page between the `ai-tokens` markers on every upload; the daily stats run renders it too. A missing or invalid upload never changes the row. Totals are cumulative from the Mac's local logs, so they only update while the Mac is on, and pruning old logs lowers them.
+
+```sh
+tail ~/.eduard-ai-tokens/push.log                      # on the Mac
+~/.eduard-ai-tokens/push-ai-tokens.sh --print          # on the Mac: show totals without sending
+systemctl status eduard-ai-tokens-render.path          # on the server
+```
+
+To stop: on the Mac, `launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/ru.eduardkhamzin.ai-tokens.plist`; on the server, delete `/var/lib/eduard-ai-tokens/.ssh/authorized_keys`.
