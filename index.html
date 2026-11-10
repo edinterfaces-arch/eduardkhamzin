@@ -40,7 +40,7 @@
     .stats-row[hidden] { display: none; }
     .streak-label { font-family: system-ui, sans-serif; color: var(--muted); }
     .stat-number { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
-    .stats-profile { display: inline-flex; align-items: center; gap: 6px; }
+    .stats-profile { display: inline-flex; align-items: center; gap: 6px; color: var(--stats); }
     .award-badge { display: block; width: 18px; height: 30px; flex-shrink: 0; }
     .stats-row a { color: var(--stats); text-decoration: underline; text-underline-offset: 3px; }
     .stats-row a:hover { text-decoration: underline; text-underline-offset: 3px; }
@@ -63,6 +63,10 @@
     <p class="approach" lang="en">AI-assisted. Still employed.</p>
     <p class="links"><a href="https://t.me/eduard_khamzin" target="_blank" rel="noopener noreferrer">Telegram</a></p>
     <section class="profile-stats" lang="en" aria-label="Profile statistics">
+      <div class="stats-row" title="Codex, Claude Code, Hermes, GitHub Copilot CLI. Обновлено: 2026-11-10">
+        <span class="stats-profile">AI agents</span>
+        <span class="stat-number ai-tokens">~895M <span class="streak-label">tokens</span></span>
+      </div>
       <div class="stats-row">
         <span class="stats-profile"><a href="https://chatgpt.com/u/iriska1337" target="_blank" rel="noopener noreferrer">Codex</a></span>
         <span class="stat-number codex-streak">14 <span class="streak-label">days streak</span></span>
