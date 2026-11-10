@@ -12,7 +12,7 @@ Issue a Let's Encrypt certificate after the domain resolves to the server, using
 
 ## Live configuration
 
-DNS A records for `@` and `www` point to `147.45.156.6`. Let's Encrypt covers both names. HTTP redirects to `https://eduardkhamzin.ru/` except ACME challenges. Renewal is scheduled by `certbot.timer`; a deploy hook reloads Nginx.
+DNS A records for `@` and `www` point to `147.45.156.6`. Let's Encrypt covers both names. HTTP redirects to `https://eduardkhamzin.ru/` except ACME challenges, and HTTPS `www.eduardkhamzin.ru` redirects to the same canonical host. Renewal is scheduled by `certbot.timer`; a deploy hook reloads Nginx.
 
 Amnezia already owns TCP/UDP 443. Its containers and configurations were left intact. Nginx listens on 8443 for TLS SNI routing: this domain goes to the loopback HTTPS site on 8444, and every other TLS name passes through to Amnezia on loopback 443. A dedicated IPv4 NAT rule routes new external TCP 443 connections to this dispatcher. UDP 443 remains untouched. Existing connections are not interrupted.
 
