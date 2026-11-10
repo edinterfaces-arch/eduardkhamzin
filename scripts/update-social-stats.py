@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Refresh public portfolio statistics and render a static HTML fragment.
 
+AI token totals are the one non-public source: the owner's laptop uploads them
+(see receive-ai-tokens.py) and this script only renders the last valid upload.
+
 No tokens, visitor tracking, browser-side fetches or additional dependencies.
 Dribbble's public feed is explicitly scoped, never described as all-time totals.
 """
@@ -23,6 +26,10 @@ SOURCES = {
 }
 START = '<!-- social-stats:start -->'
 END = '<!-- social-stats:end -->'
+TOKENS_START = '<!-- ai-tokens:start -->'
+TOKENS_END = '<!-- ai-tokens:end -->'
+CODEX_PROFILE = 'https://chatgpt.com/u/iriska1337'
+MAX_TOKENS = 10**13
 
 
 def parse_number(value):
@@ -209,6 +216,44 @@ def render(data):
     return '\n      '.join(rows)
 
 
+def validate_tokens(value):
+    """Token totals pushed from the owner's laptop (Codex + Claude Code, via ccusage)."""
+    if not isinstance(value, dict):
+        raise ValueError('Token totals must be an object')
+    result = {}
+    for key in ('codex', 'claude'):
+        number = value.get(key)
+        if type(number) is not int or not 0 <= number <= MAX_TOKENS:
+            raise ValueError(f'Invalid {key} token total')
+        result[key] = number
+    updated = datetime.fromisoformat(str(value.get('updated_at', '')))
+    result['updated_at'] = updated.isoformat(timespec='seconds')
+    return result
+
+
+def load_tokens(path):
+    if path is None or not path.exists():
+        return None
+    return validate_tokens(json.loads(path.read_text()))
+
+
+def format_tokens(value):
+    for size, suffix in ((10**9, 'B'), (10**6, 'M'), (10**3, 'K')):
+        if value >= size:
+            scaled = value / size
+            text = f'{scaled:.1f}' if scaled < 10 else f'{scaled:.0f}'
+            return text.removesuffix('.0') + suffix
+    return str(value)
+
+
+def render_tokens(value):
+    codex, claude = value['codex'], value['claude']
+    title = escape(f"Codex ~{format_tokens(codex)} + Claude Code ~{format_tokens(claude)} tokens. Обновлено: {value['updated_at'][:10]}", quote=True)
+    return (f'<div class="stats-row" title="{title}"><span class="stats-profile">'
+            f'<a href="{CODEX_PROFILE}" target="_blank" rel="noopener noreferrer">Codex</a> + Claude</span>'
+            f'<span class="stat-number ai-tokens">~{format_tokens(codex + claude)} <span class="streak-label">tokens used</span></span></div>')
+
+
 def atomic_write(path, text):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -219,16 +264,23 @@ def atomic_write(path, text):
     temporary.replace(path)
 
 
-def update(html_path, cache_path, render_only=False):
+def update(html_path, cache_path, render_only=False, tokens_path=None):
     previous = json.loads(cache_path.read_text()) if cache_path.exists() else {}
     data, errors = (previous, []) if render_only else refresh(previous)
+    try:
+        tokens = load_tokens(tokens_path)
+    except Exception as error:
+        # A bad upload never blanks the row: the page keeps its last rendered totals.
+        tokens = None
+        errors.append(f'ai-tokens: {type(error).__name__}: {error}')
     # Validate the template before writing cache or touching the published page.
     html = html_path.read_text()
     if html.count(START) != 1 or html.count(END) != 1:
         raise ValueError('Expected exactly one statistics slot in HTML')
+    rendered = html
     if data:
         fragment = START + '\n    ' + render(data) + '\n    ' + END
-        rendered = re.sub(re.escape(START) + r'.*?' + re.escape(END), lambda _: fragment, html, flags=re.S)
+        rendered = re.sub(re.escape(START) + r'.*?' + re.escape(END), lambda _: fragment, rendered, flags=re.S)
         if 'github' in data:
             value = data['github']
             count = format_count(value['contributions'], False)
@@ -238,6 +290,13 @@ def update(html_path, cache_path, render_only=False):
             rendered = re.sub(r'<!-- github-stats:start -->.*?<!-- github-stats:end -->',
                               lambda _: github_fragment, rendered, flags=re.S)
         atomic_write(cache_path, json.dumps(data, ensure_ascii=False, indent=2) + '\n')
+    if tokens:
+        if rendered.count(TOKENS_START) != 1 or rendered.count(TOKENS_END) != 1:
+            raise ValueError('Expected exactly one AI token statistics slot')
+        tokens_fragment = TOKENS_START + render_tokens(tokens) + TOKENS_END
+        rendered = re.sub(re.escape(TOKENS_START) + r'.*?' + re.escape(TOKENS_END),
+                          lambda _: tokens_fragment, rendered, flags=re.S)
+    if rendered != html:
         atomic_write(html_path, rendered)
     for error in errors:
         print(error, file=sys.stderr)
@@ -249,5 +308,6 @@ if __name__ == '__main__':
     cli.add_argument('--html', type=Path, required=True)
     cli.add_argument('--cache', type=Path, required=True)
     cli.add_argument('--render-only', action='store_true')
+    cli.add_argument('--tokens', type=Path, help='AI token totals uploaded from the laptop (optional)')
     arguments = cli.parse_args()
-    sys.exit(update(arguments.html, arguments.cache, arguments.render_only))
+    sys.exit(update(arguments.html, arguments.cache, arguments.render_only, arguments.tokens))

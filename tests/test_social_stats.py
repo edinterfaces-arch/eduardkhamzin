@@ -1,11 +1,15 @@
 import importlib.util
 from pathlib import Path
+import tempfile
 import unittest
 from datetime import date
 
 spec = importlib.util.spec_from_file_location('stats', Path(__file__).parents[1] / 'scripts/update-social-stats.py')
 stats = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(stats)
+receiver_spec = importlib.util.spec_from_file_location('receiver', Path(__file__).parents[1] / 'scripts/receive-ai-tokens.py')
+receiver = importlib.util.module_from_spec(receiver_spec)
+receiver_spec.loader.exec_module(receiver)
 
 
 class PublicCounterTests(unittest.TestCase):
@@ -56,6 +60,44 @@ class PublicCounterTests(unittest.TestCase):
         value, errors = stats.refresh(previous, unavailable)
         self.assertEqual(value, previous)
         self.assertEqual(len(errors), 3)
+
+
+class AITokenTests(unittest.TestCase):
+    PAGE = '<!-- social-stats:start --><!-- social-stats:end --><!-- ai-tokens:start -->old<!-- ai-tokens:end -->'
+
+    def test_token_totals_are_compact_and_name_both_tools(self):
+        self.assertEqual([stats.format_tokens(n) for n in (950, 1691436, 12_400_000, 884344443, 1_240_000_000)],
+                         ['950', '1.7M', '12M', '884M', '1.2B'])
+        row = stats.render_tokens({'codex': 882653007, 'claude': 1691436, 'updated_at': '2026-11-10T09:00:00+00:00'})
+        self.assertIn('~884M <span class="streak-label">tokens used</span>', row)
+        self.assertIn('Codex ~883M + Claude Code ~1.7M tokens', row)
+        self.assertIn(stats.CODEX_PROFILE, row)
+
+    def test_receiver_accepts_only_two_bounded_integers(self):
+        self.assertEqual(receiver.parse('{"codex": 5, "claude": 7}')['claude'], 7)
+        for bad in ['{"codex": 5}', '{"codex": 5, "claude": 7, "x": 1}', '{"codex": -1, "claude": 7}',
+                    '{"codex": 1.5, "claude": 7}', '{"codex": true, "claude": 7}', '[1, 2]', 'x' * 5000]:
+            with self.assertRaises(ValueError, msg=bad):
+                receiver.parse(bad)
+
+    def test_upload_is_rendered_and_bad_upload_keeps_previous_row(self):
+        with tempfile.TemporaryDirectory() as folder:
+            folder = Path(folder)
+            html, cache, tokens = folder / 'index.html', folder / 'stats.json', folder / 'tokens.json'
+            html.write_text(self.PAGE)
+            self.assertEqual(stats.update(html, cache, render_only=True, tokens_path=tokens), 0)
+            self.assertEqual(html.read_text(), self.PAGE)  # no upload yet: page untouched
+            receiver.save(tokens, receiver.parse('{"codex": 2000000, "claude": 500000}'))
+            self.assertEqual(stats.update(html, cache, render_only=True, tokens_path=tokens), 0)
+            self.assertIn('~2.5M', html.read_text())
+            tokens.write_text('{"codex": "lots"}')
+            self.assertEqual(stats.update(html, cache, render_only=True, tokens_path=tokens), 1)
+            self.assertIn('~2.5M', html.read_text())
+
+    def test_live_template_has_one_token_slot(self):
+        page = (Path(__file__).parents[1] / 'index.html').read_text()
+        self.assertEqual((page.count(stats.TOKENS_START), page.count(stats.TOKENS_END)), (1, 1))
+        self.assertNotIn('codex-streak', page)
 
 
 if __name__ == '__main__':
