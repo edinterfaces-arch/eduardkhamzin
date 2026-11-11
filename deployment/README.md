@@ -74,9 +74,11 @@ Install or update (from the Mac):
 curl -fsSL https://raw.githubusercontent.com/edinterfaces-arch/eduardkhamzin/main/deployment/server/setup-autographs.sh | ssh root@147.45.156.6 bash -s
 ```
 
-Remove unwanted autographs on the server:
+Remove unwanted autographs (from the Mac: connect, list, delete by ID, log out; times are UTC):
 
 ```sh
+ssh root@147.45.156.6
 sudo -u eduard-autographs python3 /usr/local/lib/eduard-site/autographs.py --data /var/lib/eduard-autographs/autographs.json list
 sudo -u eduard-autographs python3 /usr/local/lib/eduard-site/autographs.py --data /var/lib/eduard-autographs/autographs.json delete ID
+exit
 ```
