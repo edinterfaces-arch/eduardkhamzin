@@ -64,7 +64,7 @@ To stop: on the Mac, `launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/ru.e
 
 ## Visitor autographs
 
-Visitors draw on the page background via "Оставить автограф" (`assets/autograph.js`). Autographs are published instantly and shown faintly behind the profile for everyone. Points are integer CSS pixels from the viewport centre, so drawings stay in place around the centred profile; on smaller screens, far-out drawings fall off the edge. Ink follows the theme colour.
+Visitors sign inside a movable box opened by "Оставить автограф" (`assets/autograph.js`): drag it by its handle (or arrow keys) to place the autograph, then save. Autographs are published instantly and shown faintly behind the profile for everyone. Points are integer CSS pixels from the viewport centre, so drawings stay in place around the centred profile; on smaller screens, far-out drawings fall off the edge. Ink follows the theme colour.
 
 `scripts/autographs.py serve` (systemd `eduard-autographs.service`, user `eduard-autographs`) listens on 127.0.0.1:8091; nginx proxies only `= /api/autographs` to it. It accepts same-site POSTs (Origin check) of at most 60 strokes / 1,200 points, keeps the newest 150, and stores them in `/var/lib/eduard-autographs/autographs.json`. Because the SNI router hides visitor IPs, rate limits are global: 20 per 10 minutes, 200 per day. It logs nothing about visitors. If the API is unreachable (e.g. workers.dev), the button stays hidden.
 
@@ -74,9 +74,11 @@ Install or update (from the Mac):
 curl -fsSL https://raw.githubusercontent.com/edinterfaces-arch/eduardkhamzin/main/deployment/server/setup-autographs.sh | ssh root@147.45.156.6 bash -s
 ```
 
-Remove unwanted autographs on the server:
+Remove unwanted autographs (from the Mac: connect, list, delete by ID, log out; times are UTC):
 
 ```sh
+ssh root@147.45.156.6
 sudo -u eduard-autographs python3 /usr/local/lib/eduard-site/autographs.py --data /var/lib/eduard-autographs/autographs.json list
 sudo -u eduard-autographs python3 /usr/local/lib/eduard-site/autographs.py --data /var/lib/eduard-autographs/autographs.json delete ID
+exit
 ```
