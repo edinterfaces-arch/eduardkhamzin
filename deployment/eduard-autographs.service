@@ -1,0 +1,19 @@
+[Unit]
+Description=Visitor autographs API for eduardkhamzin.ru (127.0.0.1:8091)
+After=network.target
+
+[Service]
+User=eduard-autographs
+Group=eduard-autographs
+StateDirectory=eduard-autographs
+ExecStart=/usr/bin/python3 /usr/local/lib/eduard-site/autographs.py --data /var/lib/eduard-autographs/autographs.json serve --port 8091
+Restart=on-failure
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/eduard-autographs
+MemoryMax=128M
+
+[Install]
+WantedBy=multi-user.target
